@@ -48,7 +48,7 @@ const Register = ({navigation}) => {
         <Fumi
           label={'Full name'}
           iconClass={Icon}
-          iconName={'lock-outline'}
+          iconName={'card-account-details-outline'}
           iconColor={'#54B435'}
           iconSize={25}
           iconWidth={40}
@@ -59,7 +59,7 @@ const Register = ({navigation}) => {
         <Fumi
           label={'User name'}
           iconClass={Icon}
-          iconName={'lock-outline'}
+          iconName={'account-circle-outline'}
           iconColor={'#54B435'}
           iconSize={25}
           iconWidth={40}
@@ -70,7 +70,7 @@ const Register = ({navigation}) => {
         <Fumi
           label={'+62'}
           iconClass={Icon}
-          iconName={'lock-outline'}
+          iconName={'phone'}
           iconColor={'#54B435'}
           iconSize={25}
           iconWidth={40}
@@ -82,7 +82,7 @@ const Register = ({navigation}) => {
         <Fumi
           label={'Email'}
           iconClass={Icon}
-          iconName={'lock-outline'}
+          iconName={'email-outline'}
           iconColor={'#54B435'}
           iconSize={25}
           iconWidth={40}
@@ -94,7 +94,7 @@ const Register = ({navigation}) => {
         <Fumi
           label={'Password'}
           iconClass={Icon}
-          iconName={'lock-outline'}
+          iconName={'lock-open-variant-outline'}
           iconColor={'#54B435'}
           iconSize={25}
           iconWidth={40}
@@ -107,7 +107,7 @@ const Register = ({navigation}) => {
         <Fumi
           label={'Confrim password'}
           iconClass={Icon}
-          iconName={'lock-outline'}
+          iconName={'lock-alert-outline'}
           iconColor={'#54B435'}
           iconSize={25}
           iconWidth={40}
