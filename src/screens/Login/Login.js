@@ -27,6 +27,8 @@ const Login = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green1} />
+
+      {/* NAVBAR iMAGES */}
       <View style={styles.ViewContainer}>
         <Image source={images.Masjid} style={styles.Masjid} />
         <View style={styles.bodyText}>
@@ -39,6 +41,7 @@ const Login = ({navigation}) => {
         <Text style={styles.login2}>To login! </Text>
       </View>
       <View style={styles.bodyFumi}>
+        {/* TEXTINPUT */}
         <Fumi
           label={'Email'}
           iconClass={Icon}
@@ -68,15 +71,23 @@ const Login = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity style={styles.headerForgotPassword}>
+
+      {/* FORGOT PASSWORD */}
+      <TouchableOpacity
+        style={styles.headerForgotPassword}
+        onPress={() => navigation.navigate('ForgotPassword')}>
         <Text style={styles.txtForgot}>Forgot </Text>
         <Text style={styles.txtPassword}>Password?</Text>
       </TouchableOpacity>
+
+      {/* LOGIN */}
       <TouchableOpacity>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.login}>
           <Text style={styles.txtLogin}>Let's Login</Text>
         </LinearGradient>
       </TouchableOpacity>
+
+      {/* CONNECTED TO GOOGLE */}
       <View style={styles.bodyConnect}>
         <Text style={styles.txtConnect}>Connect With</Text>
         <TouchableOpacity>
@@ -89,6 +100,8 @@ const Login = ({navigation}) => {
           <Text style={styles.txtCreateAccount}>Create account</Text>
         </TouchableOpacity>
       </View>
+
+      {/* LINE */}
       <View style={styles.line} />
     </SafeAreaView>
   );
