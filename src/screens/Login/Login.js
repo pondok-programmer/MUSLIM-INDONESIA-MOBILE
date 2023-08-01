@@ -186,9 +186,10 @@ const styles = StyleSheet.create({
   },
   bodyEye: {
     marginBottom: 10,
+    alignItems: 'flex-end',
+    right: '9%',
   },
   eye: {
-    marginLeft: 350,
     bottom: 43,
   },
   headerForgotPassword: {

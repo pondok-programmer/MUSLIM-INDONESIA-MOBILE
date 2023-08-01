@@ -57,10 +57,10 @@ const ForgotPassword = ({navigation}) => {
         />
       </LinearGradient>
 
-      {/* LOGIN */}
-      <TouchableOpacity onPress={() => navigation.replace('NewPassword')}>
+      {/* RESET PASSWORD */}
+      <TouchableOpacity onPress={() => navigation.navigate('NewPassword')}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.reset}>
-          <Text style={styles.txtRiset}>Let's Login</Text>
+          <Text style={styles.txtRiset}>Reset</Text>
         </LinearGradient>
       </TouchableOpacity>
 
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   imgForget: {
     height: hp('34%'),
-    width: wp('66%'),
+    width: wp('86%'),
   },
   bodyTextForgetPassword: {
     marginLeft: '8%',
@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
   textInput: {
     marginLeft: 10,
     color: colors.black,
-    // fontFamily: fonts.PoppinsMedium,
   },
   reset: {
     justifyContent: 'center',

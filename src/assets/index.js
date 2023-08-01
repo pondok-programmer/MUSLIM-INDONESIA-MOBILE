@@ -11,6 +11,7 @@ const images = {
   logo: require('../assets/images/albusyro.png'),
   Masjid: require('../assets/images/Masjid.png'),
   ForgotPassword: require('../assets/images/forgotPassword.png'),
+  NewPassword: require('../assets/images/NewPassword.png'),
 };
 
 // ! Icons
