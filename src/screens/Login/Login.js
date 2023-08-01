@@ -41,7 +41,6 @@ const Login = ({navigation}) => {
 
   useEffect(() => {
     getData();
-    // saveToken();
   }, []);
 
   return (
@@ -101,7 +100,7 @@ const Login = ({navigation}) => {
       </TouchableOpacity>
 
       {/* LOGIN */}
-      <TouchableOpacity onPress={() => getData()}>
+      <TouchableOpacity onPress={() => navigation.navigate('MainNavigator')}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.login}>
           <Text style={styles.txtLogin}>Let's Login</Text>
         </LinearGradient>

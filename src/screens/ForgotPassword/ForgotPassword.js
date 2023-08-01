@@ -58,7 +58,7 @@ const ForgotPassword = ({navigation}) => {
       </LinearGradient>
 
       {/* LOGIN */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.replace('NewPassword')}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.reset}>
           <Text style={styles.txtRiset}>Let's Login</Text>
         </LinearGradient>

@@ -5,6 +5,10 @@ const AppConfig = {
     'https://e0a0-2001-448a-4043-64a8-21a0-b99a-54bf-8c5e.ngrok-free.app',
 };
 
+// const AppConfig = {
+//   baseUrl: 'https://reactnative.dev',
+// };
+
 const get = async (url = '', params = {}) => {
   let queryString = new URLSearchParams();
   for (let key in params) {
