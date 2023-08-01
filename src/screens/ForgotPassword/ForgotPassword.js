@@ -20,7 +20,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const ForgotPassword = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={'light-content'} backgroundColor={colors.green1} />
+      <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
 
       <TouchableOpacity style={styles.icon} onPress={() => navigation.goBack()}>
         <Image source={icons.left} style={styles.iconLeft} />
@@ -53,7 +53,7 @@ const ForgotPassword = ({navigation}) => {
         <TextInput
           placeholder="Put your email"
           style={styles.textInput}
-          placeholderTextColor={colors.black}
+          placeholderTextColor={colors.lightBlack}
         />
       </LinearGradient>
 
@@ -75,7 +75,7 @@ export default ForgotPassword;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.green1,
+    backgroundColor: colors.green,
   },
   icon: {
     marginLeft: 10,

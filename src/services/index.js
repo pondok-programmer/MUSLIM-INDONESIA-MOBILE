@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AppConfig = {
-  baseUrl: 'https://reactnative.dev',
+  baseUrl:
+    'https://e0a0-2001-448a-4043-64a8-21a0-b99a-54bf-8c5e.ngrok-free.app',
 };
 
 const get = async (url = '', params = {}) => {
@@ -53,7 +54,7 @@ const get = async (url = '', params = {}) => {
   return result;
 };
 
-const post = async (url = '', params = {}) => {
+const post = async (url = '', params = {}, navigation) => {
   let newUrl = `${AppConfig.baseUrl}${url}`;
   console.log('ENDPOINT...', newUrl);
 
@@ -72,6 +73,8 @@ const post = async (url = '', params = {}) => {
         })
           .then(res => res.json())
           .then(resJson => {
+            // console.log(resJson);
+            // navigation.navigate('MainNavigator');
             return resJson;
           })
           .catch(err => {

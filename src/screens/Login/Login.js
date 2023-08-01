@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -18,15 +18,35 @@ import {
 } from 'react-native-responsive-screen';
 import LinearGradient from 'react-native-linear-gradient';
 import {GlobalContext} from '../../Store/globalContext';
+import {postLogin} from '../../services/Auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-
   const globalContext = useState(GlobalContext);
+
+  // const saveToken = async token => {
+  //   try {
+  //     await AsyncStorage.setItem('token', token);
+  //   } catch (e) {
+  //     console.log('gagal save token', e);
+  //   }
+  // };
+
+  // ! GET DATA API LOGIN
+  const getData = async () => {
+    const result = await postLogin();
+    console.log('result...', result);
+  };
+
+  useEffect(() => {
+    getData();
+    // saveToken();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={'light-content'} backgroundColor={colors.green1} />
+      <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
 
       {/* NAVBAR iMAGES */}
       <View style={styles.ViewContainer}>
@@ -81,7 +101,7 @@ const Login = ({navigation}) => {
       </TouchableOpacity>
 
       {/* LOGIN */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => getData()}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.login}>
           <Text style={styles.txtLogin}>Let's Login</Text>
         </LinearGradient>
@@ -112,7 +132,7 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.green1,
+    backgroundColor: colors.green,
   },
   ViewContainer: {
     justifyContent: 'center',
