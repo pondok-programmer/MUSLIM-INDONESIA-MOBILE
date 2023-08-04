@@ -11,6 +11,9 @@ const images = {
   logo: require('../assets/images/albusyro.png'),
   Masjid: require('../assets/images/Masjid.png'),
   ForgotPassword: require('../assets/images/forgotPassword.png'),
+  NewPassword: require('../assets/images/NewPassword.png'),
+  user: require('../assets/images/user.png'),
+  kiayEen: require('../assets/images/kiayEen.png'),
 };
 
 // ! Icons
@@ -20,6 +23,10 @@ const icons = {
   eye: require('./icons/eye.png'),
   GoggleIndo: require('./icons/GoggleIndo.png'),
   left: require('./icons/left.png'),
+  notifColor: require('../assets/icons/notifColor.png'),
+  notification: require('../assets/icons/notification.png'),
+  search: require('../assets/icons/search.png'),
+  calendar: require('../assets/icons/calendar.png'),
 };
 
 // !  Export all assets files

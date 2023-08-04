@@ -6,6 +6,7 @@ const dimens = {
   xl: 18,
   xxl: 20,
   xxxl: 30,
+  xxxxl: 40,
 };
 
 export {dimens};

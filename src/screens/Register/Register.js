@@ -23,7 +23,7 @@ const Register = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <StatusBar barStyle={'light-content'} backgroundColor={colors.green1} />
+        <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
         <View style={styles.ViewContainer}>
           <Image source={images.Masjid} style={styles.Masjid} />
           <View style={styles.bodyText}>
@@ -153,7 +153,7 @@ export default Register;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.green1,
+    backgroundColor: colors.green,
   },
   ViewContainer: {
     justifyContent: 'center',

@@ -20,7 +20,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const ForgotPassword = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={'light-content'} backgroundColor={colors.green1} />
+      <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
 
       <TouchableOpacity style={styles.icon} onPress={() => navigation.goBack()}>
         <Image source={icons.left} style={styles.iconLeft} />
@@ -53,14 +53,14 @@ const ForgotPassword = ({navigation}) => {
         <TextInput
           placeholder="Put your email"
           style={styles.textInput}
-          placeholderTextColor={colors.black}
+          placeholderTextColor={colors.lightBlack}
         />
       </LinearGradient>
 
-      {/* LOGIN */}
-      <TouchableOpacity>
+      {/* RESET PASSWORD */}
+      <TouchableOpacity onPress={() => navigation.navigate('NewPassword')}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.reset}>
-          <Text style={styles.txtRiset}>Let's Login</Text>
+          <Text style={styles.txtRiset}>Reset</Text>
         </LinearGradient>
       </TouchableOpacity>
 
@@ -75,7 +75,7 @@ export default ForgotPassword;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.green1,
+    backgroundColor: colors.green,
   },
   icon: {
     marginLeft: 10,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   imgForget: {
     height: hp('34%'),
-    width: wp('66%'),
+    width: wp('86%'),
   },
   bodyTextForgetPassword: {
     marginLeft: '8%',
@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
   textInput: {
     marginLeft: 10,
     color: colors.black,
-    // fontFamily: fonts.PoppinsMedium,
   },
   reset: {
     justifyContent: 'center',

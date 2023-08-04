@@ -5,12 +5,13 @@ const colors = {
   black: 'black',
   gray: 'gray',
   red: 'red',
-  green: 'green',
+  green: '#379237',
   blue: 'blue',
-  green1: '#379237',
   yellow: '#E2DA13',
   hijau: '#40EC15',
   hijau2: '#688F16',
+  lightBlack: '#121212',
+  grey: '#424242',
 };
 
 export {colors};

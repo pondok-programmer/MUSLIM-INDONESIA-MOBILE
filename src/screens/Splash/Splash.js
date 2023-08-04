@@ -1,5 +1,12 @@
 import React, {useEffect} from 'react';
-import {View, Text, SafeAreaView, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  Image,
+  StatusBar,
+} from 'react-native';
 import {colors, dimens} from '../../utils';
 import {fonts, images} from '../../assets';
 
@@ -22,14 +29,13 @@ const Splash = ({navigation, route}) => {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
       <View style={styles.body}>
-        <Image source={images.logo} style={styles.logo} />
-        <Text style={[styles.text, {marginTop: dimens.xxl}]}>
-          RNBoilerPlate
-        </Text>
-        <Text style={[styles.text, {fontSize: dimens.m}]}>
-          By : Muhammad Hafif Al Busyro
-        </Text>
+        <Image source={images.Masjid} style={styles.logo} />
+        <View>
+          <Text style={[styles.text, {marginTop: dimens.xxl}]}>Muslim</Text>
+          <Text style={styles.textIndonesia}>Indonesia</Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -38,13 +44,14 @@ const Splash = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.green,
   },
   body: {
     height: '100%',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.primary,
+    flexDirection: 'row',
   },
   logo: {
     tintColor: colors.white,
@@ -53,9 +60,15 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   text: {
-    fontFamily: fonts.PoppinsRegular,
+    fontFamily: fonts.PoppinsSemiBold,
     fontSize: dimens.xxl,
     color: colors.white,
+  },
+  textIndonesia: {
+    fontFamily: fonts.PoppinsBold,
+    fontSize: dimens.xxl,
+    color: colors.yellow,
+    bottom: 10,
   },
 });
 
