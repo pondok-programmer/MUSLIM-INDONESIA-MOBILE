@@ -11,6 +11,7 @@ const colors = {
   hijau: '#40EC15',
   hijau2: '#688F16',
   lightBlack: '#121212',
+  grey: '#424242',
 };
 
 export {colors};
