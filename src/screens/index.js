@@ -6,6 +6,10 @@ import {Register} from './Register';
 import {ForgotPassword} from './ForgotPassword';
 import {NewPassword} from './NewPassword';
 import {Carousel} from './DataCarousel';
+import {Kajian} from './Kajian';
+import {Masjid} from './Masjid';
+import {Restoran} from './Restoran';
+import {Tpq} from './Tpq';
 
 export {
   Splash,
@@ -16,4 +20,8 @@ export {
   ForgotPassword,
   NewPassword,
   Carousel,
+  Kajian,
+  Masjid,
+  Restoran,
+  Tpq,
 };

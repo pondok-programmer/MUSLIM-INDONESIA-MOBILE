@@ -21,9 +21,12 @@ import {
 } from 'react-native-responsive-screen';
 import {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
+import {TabView, SceneMap} from 'react-native-tab-view';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 const Home = ({navigation, route, item}) => {
   const [notifikation, setNotifikation] = useState();
+  const [activeTab, setActiveTab] = useState('tab1'); // Buat state untuk mengatur tab aktif
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
 
@@ -163,13 +166,49 @@ const Home = ({navigation, route, item}) => {
           {/* CONCENT SCROLLVIEW */}
           <View style={styles.fotter}>
             <View style={styles.Line} />
-            <Text>hai</Text>
+            {/* Tab Bar */}
+            <View style={styles.tabBar}>
+              <TouchableOpacity
+                onPress={() => setActiveTab('Masjid')}
+                style={[
+                  styles.tabItem,
+                  activeTab === 'Masjid' && styles.activeTabItem,
+                ]}>
+                <Text style={styles.tabText}>Masjid</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setActiveTab('Restoran')}
+                style={[
+                  styles.tabItem,
+                  activeTab === 'Restoran' && styles.activeTabItem,
+                ]}>
+                <Text style={styles.tabText}>Restoran</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setActiveTab('Tpq')}
+                style={[
+                  styles.tabItem,
+                  activeTab === 'Tpq' && styles.activeTabItem,
+                ]}>
+                <Text style={styles.tabText}>Tpq</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </View>
     </SafeAreaView>
   );
 };
+
+const FirstRoute = () => (
+  <View style={{width: 30, height: 30, backgroundColor: colors.primary}} />
+);
+
+const SecondRoute = () => (
+  <View style={{width: 30, height: 30, backgroundColor: colors.gray}} />
+);
+
+const renderAll = SceneMap({});
 
 const styles = StyleSheet.create({
   container: {
@@ -307,6 +346,27 @@ const styles = StyleSheet.create({
     width: wp('20%'),
     marginTop: '12%',
     bottom: 40,
+  },
+  tabBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    backgroundColor: colors.yellow,
+  },
+  tabItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.black,
+  },
+  activeTabItem: {
+    backgroundColor: colors.green,
+  },
+  tabText: {
+    color: colors.black,
+    fontSize: 16,
+    fontFamily: fonts.PoppinsMedium,
   },
 });
 

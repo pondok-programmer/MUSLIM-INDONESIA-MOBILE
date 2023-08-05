@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {StyleSheet} from 'react-native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {Home, Setting} from '../screens';
+import {Home, Kajian, Setting} from '../screens';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../utils';
 import {GlobalContext} from '../Store/globalContext';
@@ -40,6 +40,20 @@ const MainNavigator = () => {
           tabBarLabel: 'Home',
           tabBarIcon: ({color}) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Kajian"
+        component={Kajian}
+        options={{
+          tabBarLabel: 'Kajian',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons
+              name="play-circle"
+              color={color}
+              size={26}
+            />
           ),
         }}
       />

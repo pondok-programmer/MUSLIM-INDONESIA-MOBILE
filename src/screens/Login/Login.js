@@ -23,6 +23,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [email, setEmail] = useState();
+  const [Password, setPassword] = useState();
   const globalContext = useState(GlobalContext);
 
   // const saveToken = async token => {
@@ -39,9 +41,9 @@ const Login = ({navigation}) => {
     console.log('result...', result);
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -71,6 +73,7 @@ const Login = ({navigation}) => {
           inputPadding={16}
           style={styles.fumiEmail}
           color={colors.black}
+          onChangeText={val => setEmail(val)}
         />
         <Fumi
           label={'Password'}
@@ -83,6 +86,7 @@ const Login = ({navigation}) => {
           secureTextEntry={secureTextEntry}
           style={styles.fumiPassword}
           color={colors.black}
+          onChangeText={val => setPassword(val)}
         />
         <View style={styles.bodyEye}>
           <TouchableOpacity onPress={() => setSecureTextEntry(val => !val)}>
@@ -100,7 +104,7 @@ const Login = ({navigation}) => {
       </TouchableOpacity>
 
       {/* LOGIN */}
-      <TouchableOpacity onPress={() => navigation.navigate('MainNavigator')}>
+      <TouchableOpacity onPress={() => getData()}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.login}>
           <Text style={styles.txtLogin}>Let's Login</Text>
         </LinearGradient>
