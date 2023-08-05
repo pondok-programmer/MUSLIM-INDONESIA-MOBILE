@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AppConfig = {
-  baseUrl:
-    'https://e0a0-2001-448a-4043-64a8-21a0-b99a-54bf-8c5e.ngrok-free.app',
+  baseUrl: 'https://71c4-2001-448a-4044-2289-deb-19a7-9b9e-7dcf.ngrok-free.app',
 };
 
 // const AppConfig = {
