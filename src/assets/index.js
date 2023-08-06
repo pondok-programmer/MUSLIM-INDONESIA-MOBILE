@@ -14,6 +14,7 @@ const images = {
   NewPassword: require('../assets/images/NewPassword.png'),
   user: require('../assets/images/user.png'),
   kiayEen: require('../assets/images/kiayEen.png'),
+  mapsMuslimIndonesia: require('../assets/images/mapsMuslimIndonesia.png'),
 };
 
 // ! Icons

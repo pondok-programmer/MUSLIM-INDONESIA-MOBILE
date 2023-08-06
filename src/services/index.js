@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ToastAndroid} from 'react-native';
 
 const AppConfig = {
   baseUrl: 'https://71c4-2001-448a-4044-2289-deb-19a7-9b9e-7dcf.ngrok-free.app',
@@ -57,8 +58,9 @@ const get = async (url = '', params = {}) => {
   return result;
 };
 
-const post = async (url = '', params = {}, navigation) => {
+const post = async (url = '', params = {}) => {
   let newUrl = `${AppConfig.baseUrl}${url}`;
+  console.log(params, 'ini params post');
   console.log('ENDPOINT...', newUrl);
 
   let token = await AsyncStorage.getItem('token');
@@ -77,7 +79,6 @@ const post = async (url = '', params = {}, navigation) => {
           .then(res => res.json())
           .then(resJson => {
             // console.log(resJson);
-            // navigation.navigate('MainNavigator');
             return resJson;
           })
           .catch(err => {
@@ -93,6 +94,8 @@ const post = async (url = '', params = {}, navigation) => {
         })
           .then(res => res.json())
           .then(resJson => {
+            params.navigation.replace('MainNavigator');
+            ToastAndroid.show('Selamat datang user', ToastAndroid.SHORT);
             return resJson;
           })
           .catch(err => {

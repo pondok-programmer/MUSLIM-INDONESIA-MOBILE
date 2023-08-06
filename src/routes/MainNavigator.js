@@ -70,6 +70,7 @@ const MainNavigator = () => {
     </Tab.Navigator>
   );
 };
+
 const styles = StyleSheet.create({
   barStyle: {
     backgroundColor: colors.white,
