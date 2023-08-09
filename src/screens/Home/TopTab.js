@@ -17,7 +17,7 @@ const TopTab = () => {
     <View style={styles.container}>
       <Tab.Navigator
         initialRouteName="Masjid"
-        activeColor={colors.primary}
+        activeColor={colors.white}
         inactiveColor="#95a5a6"
         shifting={false}
         barStyle={[

@@ -15,6 +15,8 @@ const images = {
   user: require('../assets/images/user.png'),
   kiayEen: require('../assets/images/kiayEen.png'),
   mapsMuslimIndonesia: require('../assets/images/mapsMuslimIndonesia.png'),
+  food: require('../assets/images/food.jpg'),
+  posterkajian: require('../assets/images/posterKajian.png'),
 };
 
 // ! Icons
@@ -28,6 +30,9 @@ const icons = {
   notification: require('../assets/icons/notification.png'),
   search: require('../assets/icons/search.png'),
   calendar: require('../assets/icons/calendar.png'),
+  location: require('../assets/icons/Location.png'),
+  vectorSave: require('../assets/icons/VectorSave.png'),
+  clock: require('../assets/icons/clock.png'),
 };
 
 // !  Export all assets files

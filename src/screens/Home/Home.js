@@ -21,13 +21,10 @@ import {
 } from 'react-native-responsive-screen';
 import {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {TabView, SceneMap} from 'react-native-tab-view';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import TopTab from './TopTab';
 
 const Home = ({navigation, route, item}) => {
   const [notifikation, setNotifikation] = useState();
-  const [activeTab, setActiveTab] = useState('tab1'); // Buat state untuk mengatur tab aktif
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
 
@@ -307,7 +304,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   bodyTopTab: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.white,
     height: hp('100%'),
     marginTop: '12%',
     borderTopRightRadius: 40,
@@ -324,7 +321,7 @@ const styles = StyleSheet.create({
   },
   viewTopTab: {
     height: hp('100%'),
-    width: wp('94%'),
+    width: wp('100%'),
     alignSelf: 'center',
   },
   tabBar: {
