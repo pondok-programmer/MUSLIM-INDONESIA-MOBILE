@@ -38,6 +38,7 @@ const icons = {
   VectorTambah: require('../assets/icons/VectorTambah.png'),
   Email: require('../assets/icons/Email.png'),
   right: require('../assets/icons/right.png'),
+  logOut: require('../assets/icons/logOut.png'),
 };
 
 // !  Export all assets files

@@ -48,6 +48,7 @@ const Setting = ({navigation, route}) => {
         styles.Containerdrawer,
         {backgroundColor: dark ? colors.black : colors.white},
       ]}>
+      {/* TEXT 7 ICON */}
       <View style={styles.navbarTxtAndIconRight}>
         <Text
           style={[
@@ -59,13 +60,62 @@ const Setting = ({navigation, route}) => {
           ]}>
           Pengaturan
         </Text>
-        <Image source={icons.right} style={styles.iconRight} />
+        <TouchableOpacity onPress={() => drawerLeft.current?.closeDrawer()}>
+          <Image source={icons.right} style={styles.iconRight} />
+        </TouchableOpacity>
       </View>
-      <View style={{alignItems: 'flex-end', paddingRight: 35}}>
-        <Image
-          source={images.user}
-          style={{height: hp('5%'), width: wp('6%')}}
-        />
+
+      {/* IMAGE USER */}
+      <View style={styles.bodyImgUser}>
+        <TouchableOpacity>
+          <Image source={images.user} style={styles.img} />
+        </TouchableOpacity>
+      </View>
+
+      {/* DATA STORAGE */}
+      <View style={styles.bodyPenyimpanan}>
+        <Text
+          style={[
+            styles.txtSaveDataTitle,
+            {fontSize: dimens.l, color: dark ? colors.white : colors.black},
+          ]}>
+          PENYIMPANAN
+        </Text>
+        <View style={styles.contentStorageSaveDatas}>
+          <TouchableOpacity>
+            <Image source={icons.vectorSave} style={styles.VectorSave} />
+          </TouchableOpacity>
+          <Text
+            style={[
+              styles.txtSaveData,
+              {fontSize: dimens.l, color: dark ? colors.white : colors.black},
+            ]}>
+            Penyimpanan
+          </Text>
+        </View>
+      </View>
+
+      {/* LOG OUT */}
+      <View style={styles.bodyLogout}>
+        <Text
+          style={[
+            styles.txtSaveDataTitle,
+            {fontSize: dimens.l, color: dark ? colors.white : colors.black},
+          ]}>
+          Log Out
+        </Text>
+        <View style={styles.contentStorageSaveDatas}>
+          <TouchableOpacity>
+            <Image source={icons.logOut} style={styles.VectorLogout} />
+          </TouchableOpacity>
+          <Text
+            style={[
+              styles.txtSaveData,
+              {fontSize: dimens.l, color: dark ? colors.white : colors.black},
+            ]}>
+            Log Out
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -226,6 +276,45 @@ const styles = StyleSheet.create({
     height: hp('5%'),
     width: wp('7%'),
     marginLeft: 4,
+  },
+  bodyImgUser: {
+    alignItems: 'flex-end',
+    paddingRight: 35,
+  },
+  img: {
+    height: hp('7%'),
+    width: wp('14%'),
+  },
+  bodyPenyimpanan: {
+    marginTop: '10%',
+    marginLeft: '5%',
+  },
+  bodyLogout: {
+    marginTop: '10%',
+    marginLeft: '5%',
+  },
+  contentStorageSaveDatas: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  VectorSave: {
+    height: hp('3%'),
+    width: wp('4%'),
+  },
+  VectorLogout: {
+    height: hp('4%'),
+    width: wp('8%'),
+  },
+  txtSaveDataTitle: {
+    fontFamily: fonts.PoppinsSemiBold,
+    fontSize: dimens.l,
+    color: colors.black,
+  },
+  txtSaveData: {
+    marginLeft: 10,
+    fontFamily: fonts.PoppinsRegular,
+    fontSize: dimens.l,
+    color: colors.black,
   },
   container: {
     flex: 1,
