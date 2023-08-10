@@ -24,26 +24,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [email, setEmail] = useState();
-  const [Password, setPassword] = useState();
+  const [password, setPassword] = useState();
   const globalContext = useState(GlobalContext);
-
-  // const saveToken = async token => {
-  //   try {
-  //     await AsyncStorage.setItem('token', token);
-  //   } catch (e) {
-  //     console.log('gagal save token', e);
-  //   }
-  // };
 
   // ! GET DATA API LOGIN
   const getData = async () => {
-    const result = await postLogin();
+    const result = await postLogin({email, password, navigation});
     console.log('result...', result);
   };
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -104,7 +96,7 @@ const Login = ({navigation}) => {
       </TouchableOpacity>
 
       {/* LOGIN */}
-      <TouchableOpacity onPress={() => getData()}>
+      <TouchableOpacity onPress={() => navigation.navigate('MainNavigator')}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.login}>
           <Text style={styles.txtLogin}>Let's Login</Text>
         </LinearGradient>

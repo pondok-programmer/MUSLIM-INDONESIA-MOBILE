@@ -48,7 +48,7 @@ const ForgotPassword = ({navigation}) => {
 
       {/* TEXTINPUT */}
       <LinearGradient
-        colors={['#AEAEAE', '#AEAEAE']}
+        colors={['#ffffff', '#ffffff']}
         style={styles.contentEmail}>
         <TextInput
           placeholder="Put your email"

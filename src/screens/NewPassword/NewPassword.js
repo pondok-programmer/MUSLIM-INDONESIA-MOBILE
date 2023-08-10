@@ -52,7 +52,7 @@ const NewPassword = ({navigation}) => {
 
         {/* TEXTINPUT PASSWORD */}
         <LinearGradient
-          colors={['#AEAEAE', '#AEAEAE']}
+          colors={['#FFFFFF', '#FFFFFF']}
           style={styles.contentEmail}>
           <TextInput
             placeholder="Password"
@@ -64,7 +64,7 @@ const NewPassword = ({navigation}) => {
 
         {/* TEXTINPUT CONFRIM PASSWORD */}
         <LinearGradient
-          colors={['#AEAEAE', '#AEAEAE']}
+          colors={['#FFFFFF', '#FFFFFF']}
           style={styles.contentPassword}>
           <TextInput
             placeholder="Confrim Password"
