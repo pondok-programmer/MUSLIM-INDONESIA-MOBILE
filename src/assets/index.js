@@ -33,6 +33,11 @@ const icons = {
   location: require('../assets/icons/Location.png'),
   vectorSave: require('../assets/icons/VectorSave.png'),
   clock: require('../assets/icons/clock.png'),
+  setting: require('../assets/icons/setting.png'),
+  IconUser: require('../assets/icons/IconUser.png'),
+  VectorTambah: require('../assets/icons/VectorTambah.png'),
+  Email: require('../assets/icons/Email.png'),
+  right: require('../assets/icons/right.png'),
 };
 
 // !  Export all assets files
