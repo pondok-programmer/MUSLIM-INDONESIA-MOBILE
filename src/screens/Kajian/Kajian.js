@@ -43,7 +43,6 @@ const Kajian = () => {
             />
           </View>
         </View>
-
         {/* CONTENT KAJIAN */}
         <LinearGradient
           colors={['#ffffff', '#ffffff']}
@@ -63,21 +62,20 @@ const Kajian = () => {
             <Text style={styles.textLocation}>Yogyakarta</Text>
           </View>
 
-          {/* LOCATION */}
+          {/* DATE */}
           <View style={styles.locationCalender}>
             <Image source={icons.calendar} style={styles.imgCalendar} />
             <Text style={styles.textLocation}>Monday, 18-04-2023</Text>
           </View>
 
-          {/* LOCATION */}
-          <View style={styles.location}>
+          {/* CLOCK */}
+          <View style={styles.locationClock}>
             <Image source={icons.clock} style={styles.imgClock} />
-            <Text style={styles.textLocation}>Yogyakarta</Text>
+            <Text style={styles.textClock}>24.00 pm</Text>
           </View>
         </LinearGradient>
-
         {/* CONTENT KAJIAN 2 */}
-        <LinearGradient
+        {/* <LinearGradient
           colors={['#ffffff', '#ffffff']}
           style={styles.contentKajian}>
           <View style={styles.body}>
@@ -85,28 +83,27 @@ const Kajian = () => {
               <Image source={images.posterkajian} style={styles.img} />
             </TouchableOpacity>
             <Text style={styles.txtTitle}>Mengkaji dengan metode syi'ah</Text>
-          </View>
-
-          {/* LOCATION */}
-          <View style={styles.location}>
+          </View> */}
+        {/* LOCATION */}
+        {/* <View style={styles.location}>
             <TouchableOpacity>
               <Image source={icons.location} style={styles.imgLocation} />
             </TouchableOpacity>
             <Text style={styles.textLocation}>Yogyakarta</Text>
           </View>
 
-          {/* LOCATION */}
-          <View style={styles.locationCalender}>
+          {/* DATE */}
+        {/* <View style={styles.locationCalender}>
             <Image source={icons.calendar} style={styles.imgCalendar} />
             <Text style={styles.textLocation}>Monday, 18-04-2023</Text>
-          </View>
+          {/* </View> */}
 
-          {/* LOCATION */}
-          <View style={styles.location}>
+        {/* CLOCK */}
+        {/* <View style={styles.locationClock}>
             <Image source={icons.clock} style={styles.imgClock} />
-            <Text style={styles.textLocation}>Yogyakarta</Text>
-          </View>
-        </LinearGradient>
+            <Text style={styles.textClock}>17.OO PM</Text>
+          </View> */}
+        {/* </LinearGradient> */}
       </View>
     </SafeAreaView>
   );
@@ -138,17 +135,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     height: hp('4%'),
     width: wp('7%'),
-    marginTop: '3%',
+    marginTop: '2%',
   },
   contentTextinput: {
-    height: hp('7%'),
+    height: hp('6%'),
     width: wp('80%'),
   },
   contentKajian: {
     width: wp('90%'),
     height: hp('18%'),
     marginHorizontal: 20,
-    marginTop: '10%',
+    marginTop: '6%',
     borderRadius: 10,
   },
   body: {
@@ -175,15 +172,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: '21%',
     bottom: 95,
-    paddingLeft: 10,
     padding: 3,
+    // backgroundColor: colors.blue,
+  },
+  locationClock: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginLeft: '17%',
+    bottom: 95,
   },
   locationCalender: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginLeft: '41%',
+    marginLeft: '39%',
     bottom: 97,
     padding: 3,
+    // backgroundColor: colors.blue,
   },
   imgLocation: {
     height: hp('2%'),
@@ -191,6 +195,10 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   textLocation: {
+    fontFamily: fonts.PoppinsMedium,
+    color: colors.black,
+  },
+  textClock: {
     fontFamily: fonts.PoppinsMedium,
     color: colors.black,
   },

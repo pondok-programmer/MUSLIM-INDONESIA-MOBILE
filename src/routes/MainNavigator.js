@@ -60,7 +60,6 @@ const MainNavigator = () => {
       <Tab.Screen
         name="Profile"
         component={Setting}
-        barStyle={styles.setting}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({color}) => (
@@ -74,7 +73,6 @@ const MainNavigator = () => {
 
 const styles = StyleSheet.create({
   barStyle: {
-    backgroundColor: colors.white,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     paddingHorizontal: 8,
@@ -83,10 +81,6 @@ const styles = StyleSheet.create({
     borderColor: colors.lightGray,
     width: wp('100%'),
     // position: 'absolute', //use if you want to absolute navbar
-  },
-  setting: {
-    boderTopRightRadius: 30,
-    borderTopLeftRadius: 30,
   },
 });
 export default MainNavigator;

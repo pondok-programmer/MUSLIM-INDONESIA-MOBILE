@@ -17,6 +17,8 @@ const images = {
   mapsMuslimIndonesia: require('../assets/images/mapsMuslimIndonesia.png'),
   food: require('../assets/images/food.jpg'),
   posterkajian: require('../assets/images/posterKajian.png'),
+  logoMuslimIndo: require('../assets/images/logoMuslimIndo.jpg'),
+  BgLogo: require('../assets/images/BgLogo.png'),
 };
 
 // ! Icons
@@ -36,9 +38,10 @@ const icons = {
   setting: require('../assets/icons/setting.png'),
   IconUser: require('../assets/icons/IconUser.png'),
   VectorTambah: require('../assets/icons/VectorTambah.png'),
-  Email: require('../assets/icons/Email.png'),
+  gmail: require('../assets/icons/gmail.png'),
   right: require('../assets/icons/right.png'),
   logOut: require('../assets/icons/logOut.png'),
+  goggleMap: require('../assets/icons/goggleMap.png'),
 };
 
 // !  Export all assets files

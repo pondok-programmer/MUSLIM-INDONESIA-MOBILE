@@ -9,6 +9,10 @@ import {
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {fonts, images} from '../../assets';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const Splash = ({navigation, route}) => {
   useEffect(() => {
@@ -31,10 +35,10 @@ const Splash = ({navigation, route}) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
       <View style={styles.body}>
-        <Image source={images.Masjid} style={styles.logo} />
-        <View>
+        <Image source={images.logoMuslimIndo} style={styles.logo} />
+        <View style={styles.bodyTitle}>
           <Text style={[styles.text, {marginTop: dimens.xxl}]}>Muslim</Text>
-          <Text style={styles.textIndonesia}>Indonesia</Text>
+          <Text style={styles.textIndonesia}> Indonesia</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -47,28 +51,30 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green,
   },
   body: {
-    height: '100%',
-    width: '100%',
+    height: hp('100%'),
+    width: wp('100%'),
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    height: hp('20%'),
+    width: wp('40%'),
+    borderRadius: 95,
+  },
+  bodyTitle: {
     alignItems: 'center',
     flexDirection: 'row',
   },
-  logo: {
-    tintColor: colors.white,
-    height: 100,
-    width: 100,
-    resizeMode: 'contain',
-  },
   text: {
-    fontFamily: fonts.PoppinsSemiBold,
+    fontFamily: fonts.PoppinsBold,
     fontSize: dimens.xxl,
     color: colors.white,
+    bottom: 10,
   },
   textIndonesia: {
     fontFamily: fonts.PoppinsBold,
     fontSize: dimens.xxl,
     color: colors.yellow,
-    bottom: 10,
   },
 });
 

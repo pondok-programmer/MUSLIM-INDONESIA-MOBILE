@@ -19,7 +19,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {GlobalContext} from '../../Store/globalContext';
 import {postLogin} from '../../services/Auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -43,11 +42,11 @@ const Login = ({navigation}) => {
 
       {/* NAVBAR iMAGES */}
       <View style={styles.ViewContainer}>
-        <Image source={images.Masjid} style={styles.Masjid} />
-        <View style={styles.bodyText}>
+        <Image source={images.BgLogo} style={styles.Masjid} />
+        {/* <View style={styles.bodyText}>
           <Text style={styles.textMasjid}>Muslim </Text>
           <Text style={styles.textIndo}>Indonesia</Text>
-        </View>
+        </View> */}
       </View>
       <View style={styles.navbarLogin}>
         <Text style={styles.login1}>Welcome </Text>
@@ -132,11 +131,12 @@ const styles = StyleSheet.create({
   ViewContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '5%',
+    // marginTop: '5%',
   },
   Masjid: {
-    height: hp('25%'),
-    width: wp('60%'),
+    height: hp('27%'),
+    width: wp('100%'),
+    // borderRadius: 10,
   },
   bodyText: {
     flexDirection: 'row',
@@ -247,9 +247,10 @@ const styles = StyleSheet.create({
   },
   line: {
     width: wp('40%'),
-    borderWidth: 3,
+    borderWidth: 2,
     color: colors.black,
-    marginTop: '7%',
+    bottom: 0,
+    marginTop: '22%',
     marginLeft: 128,
     borderRadius: 20,
   },

@@ -10,6 +10,7 @@ import {Kajian} from './Kajian';
 import {Masjid} from './Masjid';
 import {Restoran} from './Restoran';
 import {Tpq} from './Tpq';
+import {EditProfile} from './EditProfile';
 
 export {
   Splash,
@@ -24,4 +25,5 @@ export {
   Masjid,
   Restoran,
   Tpq,
+  EditProfile,
 };

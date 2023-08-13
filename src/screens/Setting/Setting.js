@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   DrawerLayoutAndroid,
+  Alert,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {fonts, icons, images} from '../../assets';
@@ -41,6 +42,18 @@ const Setting = ({navigation, route}) => {
 
   console.log(globalContext.state);
 
+  // ? WARNING
+  const warning = () => {
+    Alert.alert('Perhatian !', 'Apakah anda ingin keluar', [
+      {
+        text: 'Tidak',
+      },
+      {
+        text: 'Ok',
+      },
+    ]);
+  };
+
   // ! DRAWER LAYOUT ANDROID
   const drawerLayout = (
     <View
@@ -62,13 +75,6 @@ const Setting = ({navigation, route}) => {
         </Text>
         <TouchableOpacity onPress={() => drawerLeft.current?.closeDrawer()}>
           <Image source={icons.right} style={styles.iconRight} />
-        </TouchableOpacity>
-      </View>
-
-      {/* IMAGE USER */}
-      <View style={styles.bodyImgUser}>
-        <TouchableOpacity>
-          <Image source={images.user} style={styles.img} />
         </TouchableOpacity>
       </View>
 
@@ -105,7 +111,7 @@ const Setting = ({navigation, route}) => {
           Log Out
         </Text>
         <View style={styles.contentStorageSaveDatas}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => warning()}>
             <Image source={icons.logOut} style={styles.VectorLogout} />
           </TouchableOpacity>
           <Text
@@ -181,7 +187,8 @@ const Setting = ({navigation, route}) => {
             </View>
 
             {/* BUTTON EDIT PROFILE */}
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('EditProfile')}>
               <LinearGradient
                 colors={['#D9D9D9', '#D9D9D9']}
                 style={styles.bodyEditProfile}>
@@ -192,13 +199,13 @@ const Setting = ({navigation, route}) => {
           </View>
 
           {/* BACKGROUND FOR PAGE SETTING  */}
-          <View style={styles.backgroound1} />
+          {/* <View style={styles.backgroound1} />
           <View
             style={[
               styles.backgroound2,
               {backgroundColor: dark ? colors.black : colors.white},
             ]}
-          />
+          /> */}
 
           {/* CONTENT PROFILE */}
           <View
@@ -212,7 +219,7 @@ const Setting = ({navigation, route}) => {
             <View style={styles.CardProfile}>
               <TouchableOpacity style={styles.viewBodyCardEmail}>
                 <View style={styles.bodyIconEmail} />
-                <Image source={icons.IconUser} style={styles.userIcon} />
+                <Image source={images.user} style={styles.userIcon} />
               </TouchableOpacity>
               <View style={styles.titleTextProfile}>
                 <Text style={styles.cardTxtTitleProfile}>PROFILE</Text>
@@ -226,7 +233,7 @@ const Setting = ({navigation, route}) => {
             <View style={styles.Cardlocation}>
               <TouchableOpacity style={styles.viewBodyCardEmail}>
                 <View style={styles.bodyIconEmail} />
-                <Image source={icons.location} style={styles.userLocation} />
+                <Image source={icons.goggleMap} style={styles.userLocation} />
               </TouchableOpacity>
               <View style={styles.titleTextProfile}>
                 <Text style={styles.cardTxtTitleProfile}>LOCATION</Text>
@@ -240,7 +247,7 @@ const Setting = ({navigation, route}) => {
             <View style={styles.CardEmail}>
               <TouchableOpacity style={styles.viewBodyCardEmail}>
                 <View style={styles.bodyIconEmail} />
-                <Image source={icons.Email} style={styles.userIcon} />
+                <Image source={icons.gmail} style={styles.userIcon} />
               </TouchableOpacity>
               <View style={styles.titleTextProfile}>
                 <Text style={styles.cardTxtTitleProfile}>EMAIL</Text>
@@ -276,14 +283,6 @@ const styles = StyleSheet.create({
     height: hp('5%'),
     width: wp('7%'),
     marginLeft: 4,
-  },
-  bodyImgUser: {
-    alignItems: 'flex-end',
-    paddingRight: 35,
-  },
-  img: {
-    height: hp('7%'),
-    width: wp('14%'),
   },
   bodyPenyimpanan: {
     marginTop: '10%',
@@ -387,12 +386,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   backgroound1: {
-    backgroundColor: colors.green,
-    width: '13%',
-    height: '7%',
+    backgroundColor: colors.red,
+    width: '15%',
+    height: '6%',
     marginLeft: '87%',
     borderBottomRightRadius: 80,
-    top: '1.3%',
+    top: '1.4%',
     zIndex: 50,
   },
   backgroound2: {
@@ -406,7 +405,9 @@ const styles = StyleSheet.create({
   ContentProfile: {
     backgroundColor: colors.white,
     height: hp('100%'),
-    borderTopLeftRadius: 60,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    marginTop: '20%',
     bottom: 44,
   },
   CardProfile: {

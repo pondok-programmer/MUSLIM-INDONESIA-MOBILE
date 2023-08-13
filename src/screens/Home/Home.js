@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   headerTxtWelcome: {
     marginTop: '5%',
-    marginLeft: 20,
+    marginLeft: 10,
   },
   viewMuslimIndonesia: {
     flexDirection: 'row',
@@ -206,7 +206,6 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   bodyTxtUser: {
-    marginTop: '3%',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -219,14 +218,14 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     flexDirection: 'row',
     bottom: '65%',
-    marginRight: '5%',
+    marginRight: '2%',
   },
   imgNotif: {
     height: hp('4%'),
     width: wp('8%'),
   },
   imgUser: {
-    height: hp('7%'),
+    height: hp('7.3%'),
     width: wp('15%'),
   },
   textInput: {
@@ -248,6 +247,8 @@ const styles = StyleSheet.create({
   ViewTextInput: {
     height: hp('7%'),
     width: wp('80%'),
+    textShadowColor: '#688F16',
+    color: colors.black,
   },
   contentCarosel: {
     marginHorizontal: 20,
@@ -275,11 +276,11 @@ const styles = StyleSheet.create({
   bottomDate: {
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: 45,
+    bottom: 37,
     backgroundColor: colors.white,
-    marginLeft: '61%',
+    marginLeft: '59%',
     height: hp('4%'),
-    width: wp('33%'),
+    width: wp('35%'),
     borderRadius: 10,
   },
   viewBottom: {
@@ -306,7 +307,7 @@ const styles = StyleSheet.create({
   bodyTopTab: {
     backgroundColor: colors.white,
     height: hp('100%'),
-    marginTop: '12%',
+    marginTop: '20%',
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
   },
