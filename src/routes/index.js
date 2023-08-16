@@ -1,7 +1,14 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {ForgotPassword, Login, NewPassword, Register, Splash} from '../screens';
+import {
+  EditProfile,
+  ForgotPassword,
+  Login,
+  NewPassword,
+  Register,
+  Splash,
+} from '../screens';
 import MainNavigator from './MainNavigator';
 
 const Stack = createNativeStackNavigator();
@@ -19,6 +26,7 @@ const AppNavigator = () => {
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="MainNavigator" component={MainNavigator} />
         <Stack.Screen name="NewPassword" component={NewPassword} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   );

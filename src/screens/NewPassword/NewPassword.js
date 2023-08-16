@@ -74,12 +74,15 @@ const NewPassword = ({navigation}) => {
           />
         </LinearGradient>
 
+        {/* NEW PASSWORD */}
         <View style={styles.bodyEyePassword}>
           <TouchableOpacity
             onPress={() => setSecureTextEntryPassword(pas => !pas)}>
             <Image source={icons.eye} style={styles.eye} />
           </TouchableOpacity>
         </View>
+
+        {/* CONFRIM PASSWWORD */}
         <View style={styles.bodyEye}>
           <TouchableOpacity
             onPress={() => setSecureTextEntryConfrim(val => !val)}>
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
   },
   bodyEyePassword: {
     alignItems: 'flex-end',
-    bottom: '16%',
+    bottom: '15%',
     right: '12%',
   },
   bodyEye: {
@@ -204,11 +207,11 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   line: {
-    backgroundColor: colors.black,
-    borderWidth: 3,
-    bottom: 5,
-    marginLeft: 125,
     width: wp('40%'),
-    marginTop: '15%',
+    borderWidth: 1.8,
+    color: colors.black,
+    marginTop: '16%',
+    marginLeft: 128,
+    borderRadius: 10,
   },
 });

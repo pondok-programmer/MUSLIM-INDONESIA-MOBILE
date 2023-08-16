@@ -249,11 +249,11 @@ const styles = StyleSheet.create({
   },
   line: {
     width: wp('40%'),
-    borderWidth: 3,
+    borderWidth: 1.8,
     color: colors.black,
-    bottom: '1%',
-    marginTop: '6%',
+    marginTop: '10%',
+    bottom: 7,
     marginLeft: 128,
-    borderRadius: 20,
+    borderRadius: 10,
   },
 });
