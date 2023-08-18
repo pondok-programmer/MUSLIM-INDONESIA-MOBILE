@@ -198,15 +198,6 @@ const Setting = ({navigation, route}) => {
             <View style={styles.line} />
           </View>
 
-          {/* BACKGROUND FOR PAGE SETTING  */}
-          {/* <View style={styles.backgroound1} />
-          <View
-            style={[
-              styles.backgroound2,
-              {backgroundColor: dark ? colors.black : colors.white},
-            ]}
-          /> */}
-
           {/* CONTENT PROFILE */}
           <View
             style={[

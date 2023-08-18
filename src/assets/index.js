@@ -19,6 +19,8 @@ const images = {
   posterkajian: require('../assets/images/posterKajian.png'),
   logoMuslimIndo: require('../assets/images/logoMuslimIndo.jpg'),
   BgLogo: require('../assets/images/BgLogo.png'),
+  UstadzFarid: require('../assets/images/UstadzFarid.png'),
+  UstadzKiki: require('../assets/images/UstadzKiki.png'),
 };
 
 // ! Icons

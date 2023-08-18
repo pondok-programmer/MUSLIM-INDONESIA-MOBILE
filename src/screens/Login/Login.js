@@ -19,6 +19,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {GlobalContext} from '../../Store/globalContext';
 import {postLogin} from '../../services/Auth';
+// import {useAuth} from './auth'; // Import your authentication context or hook
 
 const Login = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -95,7 +96,7 @@ const Login = ({navigation}) => {
       </TouchableOpacity>
 
       {/* LOGIN */}
-      <TouchableOpacity onPress={() => navigation.navigate('MainNavigator')}>
+      <TouchableOpacity onPress={() => getData()}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.login}>
           <Text style={styles.txtLogin}>Let's Login</Text>
         </LinearGradient>

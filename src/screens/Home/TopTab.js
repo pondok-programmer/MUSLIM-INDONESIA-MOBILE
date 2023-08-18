@@ -36,7 +36,6 @@ function MyTabBar({state, descriptors, navigation, position}) {
           });
 
           if (!isFocused && !event.defaultPrevented) {
-            // The `merge: true` option makes sure that the params inside the tab screen are preserved
             navigation.navigate({name: route.name, merge: true});
           }
         };
@@ -97,16 +96,6 @@ const TopTab = () => {
       inactiveColor="#95a5a6"
       shifting={false}
       tabBar={props => <MyTabBar {...props} />}
-      // barStyle={[
-      //   styles.barStyle,
-      //   {
-      //     backgroundColor: dark ? colors.black : colors.white,
-      //     borderTopWidth: dark ? 0.3 : 0,
-      //     borderRightWidth: dark ? 0.3 : 0,
-      //     borderLeftWidth: dark ? 0.3 : 0,
-      //     borderColor: colors.white,
-      //   },
-      // ]}
       style={{backgroundColor: dark ? colors.black : colors.white}}>
       <Tab.Screen name={'Masjid'} component={Masjid} />
       <Tab.Screen name={'Restoran'} component={Restoran} />
