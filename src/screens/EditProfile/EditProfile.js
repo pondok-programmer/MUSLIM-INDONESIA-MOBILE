@@ -9,6 +9,8 @@ import {
   Image,
   TextInput,
   Alert,
+  Button,
+  Dimensions,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {
@@ -19,92 +21,49 @@ import {useContext} from 'react';
 import {GlobalContext} from '../../Store/globalContext';
 import {fonts, icons, images} from '../../assets';
 import LinearGradient from 'react-native-linear-gradient';
-import {launchCamera, launchCameraAsync} from 'react-native-image-picker';
-// import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
-// import {PermissionsAndroid} from 'react-native';
-// import * as ImagePicker from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 const EditProfile = ({navigation}) => {
   const globaleContext = useContext(GlobalContext);
   const dark = globaleContext.state.isDark;
+  const [imageCamera, setImageCamera] = React.useState(null);
+
   const [gambar, setGambar] = useState({
     uri: '',
     name: null,
     type: null,
   });
 
-  // const [imageSource, setImageSource] = useState(null);
-
-  // const selectImage = () => {
-  //   const options = {
-  //     title: 'Select Image',
-  //     storageOptions: {
-  //       skipBackup: true,
-  //       path: 'images',
-  //     },
-  //   };
-
-  //   ImagePicker.showImagePicker(options, response => {
-  //     if (response.didCancel) {
-  //       console.log('User cancelled image picker');
-  //     } else if (response.error) {
-  //       console.log('ImagePicker Error: ', response.error);
-  //     } else {
-  //       // Set the selected image as the source for the Image component
-  //       const source = {uri: response.uri};
-  //       setImageSource(source);
-  //     }
-  //   });
-  // };
   // ! IMAGES PICKER
-  // const openCamera = () => {
-  //   // Minta izin kamera langsung sebelum membuka kamera
-  //   request(PERMISSIONS.ANDROID.CAMERA).then(result => {
-  //     if (result === RESULTS.GRANTED) {
-  //       const option = {
-  //         mediaType: 'photo',
-  //         quality: 0.1,
-  //       };
-  //       launchCamera(option, res => {
-  //         console.log(res);
+  // {' CAMERA'}
+  const openCamera = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo', // 'Images' should be changed to 'photo'
+        quality: 0.1,
+      },
+      result => {
+        setImageCamera(result.uri);
+        console.log(result.uri);
+      },
+    );
+  };
 
-  //         if (res.didCancel) {
-  //           console.log('User Cancelled photo');
-  //         } else if (res.errorCode) {
-  //           console.log('Error occurred while capturing photo');
-  //           console.log(res.errorMessage);
-  //         } else {
-  //           const data = res.assets;
-  //           console.log(data);
-  //         }
-  //       });
-  //     } else if (result === RESULTS.DENIED) {
-  //       console.log('Permission denied for accessing camera');
-  //     }
-  //     // Anda bisa menangani hasil lainnya juga
-  //   });
-
-  // async function chooseImage() {
-  //   try {
-  //     const result = await launchCamera({
-  //       mediaTypes: 'photo',
-  //       quality: 0.1,
-  //     });
-
-  //     if (!result.cancelled) {
-  //       const {uri, width, height, type} = result;
-  //       setGambar({
-  //         uri: uri || '',
-  //         width: width || 0,
-  //         height: height || 0,
-  //         type: type || '',
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
+  // {' GALERLY'}
+  const openGallery = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 0.1,
+      },
+      result => {
+        console.log(result);
+      },
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
@@ -126,27 +85,29 @@ const EditProfile = ({navigation}) => {
         </View>
 
         {/* IMG USER */}
-        {/* <View style={styles.bodyImageUser}>
-          {gambar.uri ? (
-            <Image
-              source={{uri: gambar.uri}}
-              style={{width: wp('25%'), height: hp('15%'), borderRadius: 250}}
-            />
-          ) : (
-            <Image source={images.user} style={styles.imgUser} />
-          )}
-        </View> */}
-        {/* <View>
-          {imageSource && (
-            <Image source={imageSource} style={{width: 200, height: 200}} />
-          )}
-        </View> */}
+        <View style={styles.bodyImageUser}>
+          <View style={styles.bodyImageUser}>
+            {gambar.uri ? (
+              <Image source={images.user} style={styles.imgUser} />
+            ) : (
+              <Image
+                source={{uri: imageCamera}}
+                style={{
+                  width: wp('33%'),
+                  height: hp('15%'),
+                  borderRadius: 200,
+                  backgroundColor: colors.black,
+                }}
+              />
+            )}
+          </View>
+        </View>
 
-        {/* VECTOR  */}
+        {/* VECTOR TAKE CAMERA & GALERLY  */}
         <View style={styles.bodyInputImageGallery}>
           <TouchableOpacity
             style={styles.TochableVector}
-            onPress={() => chooseImage()}>
+            onPress={() => openCamera()}>
             <Image source={icons.VectorTambah} style={styles.imgVector} />
           </TouchableOpacity>
         </View>
@@ -250,9 +211,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.PoppinsRegular,
   },
   bodyImageUser: {
-    marginTop: '3%',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: '3%',
+    height: height / 6,
+    width: width / 2,
+    marginHorizontal: 100,
+    // backgroundColor: colors.blue,
   },
   imgUser: {
     height: hp('17%'),
@@ -312,6 +277,6 @@ const styles = StyleSheet.create({
     height: hp('100%'),
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    bottom: 10,
+    bottom: '2%',
   },
 });
