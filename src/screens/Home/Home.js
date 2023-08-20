@@ -186,7 +186,7 @@ const Home = ({navigation, route, item}) => {
               width: 10,
               height: 10,
               borderRadius: 10,
-              marginHorizontal: 8,
+              bottom: 10,
               backgroundColor: colors.white,
             }}
             inactiveDotStyle={{

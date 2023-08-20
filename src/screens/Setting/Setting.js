@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   View,
   SafeAreaView,
@@ -20,9 +20,12 @@ import {
 } from 'react-native-responsive-screen';
 import LinearGradient from 'react-native-linear-gradient';
 import {useRef} from 'react';
+import {postLogout} from '../../services';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Setting = ({navigation, route}) => {
-  const drawerLeft = useRef(DrawerLayoutAndroid);
+  const [loggedOut, setLoggedOut] = useState();
+  const drawerLeft = useRef(null);
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
 
@@ -42,7 +45,13 @@ const Setting = ({navigation, route}) => {
 
   console.log(globalContext.state);
 
-  // ? WARNING
+  // ! RENDER API LOGOUT
+  const logOut = async () => {
+    const result = await postLogout();
+    console.log('result...', result);
+  };
+
+  // ? ALERT WARNING
   const warning = () => {
     Alert.alert('Perhatian !', 'Apakah anda ingin keluar', [
       {
@@ -50,6 +59,7 @@ const Setting = ({navigation, route}) => {
       },
       {
         text: 'Ok',
+        onPress: () => logOut(),
       },
     ]);
   };
@@ -110,10 +120,10 @@ const Setting = ({navigation, route}) => {
           ]}>
           Log Out
         </Text>
-        <View style={styles.contentStorageSaveDatas}>
-          <TouchableOpacity onPress={() => warning()}>
-            <Image source={icons.logOut} style={styles.VectorLogout} />
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.contentStorageSaveDatas}
+          onPress={() => warning()}>
+          <Image source={icons.logOut} style={styles.VectorLogout} />
           <Text
             style={[
               styles.txtSaveData,
@@ -121,7 +131,7 @@ const Setting = ({navigation, route}) => {
             ]}>
             Log Out
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

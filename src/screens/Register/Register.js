@@ -8,7 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {colors, dimens} from '../../utils';
 import {fonts, icons, images} from '../../assets';
 import {
@@ -18,8 +18,34 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Fumi} from 'react-native-textinput-effects';
 import LinearGradient from 'react-native-linear-gradient';
+import {postReg} from '../../services';
 
 const Register = ({navigation}) => {
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+
+  const [full_name, setFull_name] = useState();
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
+  const [password_confirmation, SetPassword_confirmation] = useState();
+  const [phone_number, setPhone_number] = useState();
+  const [email, setEmail] = useState();
+
+  const Reg = async () => {
+    const result = await postReg({
+      full_name,
+      username,
+      email,
+      password,
+      password_confirmation,
+      phone_number,
+    });
+    console.log('Result...', result);
+  };
+
+  useEffect(() => {
+    Reg();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -35,7 +61,9 @@ const Register = ({navigation}) => {
           <Text style={styles.txtCreate}>Create</Text>
           <Text style={styles.txtAccount}> Account</Text>
         </View>
-        <View>
+
+        {/* DESCRIPTION MUSLIM INDO */}
+        <View style={styles.bodyDes}>
           <Text style={styles.bodyTextDescription}>
             " Selamat datang di Muslim Indonesia, Mari kita menjalani hari
             dengan semangat keimanan. Dapatkan Restoran & kajian - kajian serta
@@ -55,9 +83,10 @@ const Register = ({navigation}) => {
           inputPadding={16}
           style={styles.fumiPassword}
           color={colors.black}
+          onChangeText={val => setFull_name(val)}
         />
         <Fumi
-          label={'User name'}
+          label={'Username'}
           iconClass={Icon}
           iconName={'account-circle-outline'}
           iconColor={'#54B435'}
@@ -66,6 +95,7 @@ const Register = ({navigation}) => {
           inputPadding={16}
           style={styles.fumiPassword}
           color={colors.black}
+          onChangeText={val => setUsername(val)}
         />
         <Fumi
           label={'+62'}
@@ -78,6 +108,7 @@ const Register = ({navigation}) => {
           keyboardType="number-pad"
           style={styles.fumiPassword}
           color={colors.black}
+          onChangeText={val => setPhone_number(val)}
         />
         <Fumi
           label={'Email'}
@@ -90,6 +121,7 @@ const Register = ({navigation}) => {
           keyboardType="name-phone-pad"
           style={styles.fumiPassword}
           color={colors.black}
+          onChangeText={val => setEmail(val)}
         />
         <Fumi
           label={'Password'}
@@ -100,10 +132,18 @@ const Register = ({navigation}) => {
           iconWidth={40}
           inputPadding={16}
           keyboardType="name-phone-pad"
-          secureTextEntry={true}
+          secureTextEntry={secureTextEntry}
           style={styles.fumiPassword}
           color={colors.black}
+          onChangeText={val => setPassword(val)}
         />
+
+        <View style={styles.bodyEyePassword}>
+          <TouchableOpacity onPress={() => setSecureTextEntry(val => !val)}>
+            <Image source={icons.eye} style={styles.eye} />
+          </TouchableOpacity>
+        </View>
+
         <Fumi
           label={'Confrim password'}
           iconClass={Icon}
@@ -113,13 +153,20 @@ const Register = ({navigation}) => {
           iconWidth={40}
           inputPadding={16}
           keyboardType="name-phone-pad"
-          secureTextEntry={true}
-          style={styles.fumiPassword}
+          secureTextEntry={secureTextEntry}
+          style={styles.fumiConfrimPassword}
           color={colors.black}
+          onChangeText={val => SetPassword_confirmation(val)}
         />
 
+        <View style={styles.bodyEye}>
+          <TouchableOpacity onPress={() => setSecureTextEntry(val => !val)}>
+            <Image source={icons.eye} style={styles.eye} />
+          </TouchableOpacity>
+        </View>
+
         {/* FOOTER */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => Reg()}>
           <LinearGradient
             colors={['#40EC15', '#688F16']}
             style={styles.contentCreate}>
@@ -194,6 +241,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.PoppinsBold,
     fontSize: dimens.xxxl,
   },
+  bodyDes: {
+    marginTop: 5,
+  },
   bodyTextDescription: {
     color: colors.white,
     textAlign: 'center',
@@ -205,6 +255,25 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     height: hp('10%'),
   },
+  fumiConfrimPassword: {
+    marginHorizontal: 20,
+    borderRadius: 10,
+    marginTop: '2%',
+    height: hp('10%'),
+    bottom: 22,
+  },
+  bodyEyePassword: {
+    alignItems: 'flex-end',
+    right: '9%',
+  },
+  bodyEye: {
+    alignItems: 'flex-end',
+    right: '9%',
+    bottom: 20,
+  },
+  eye: {
+    bottom: 43,
+  },
   contentCreate: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -212,7 +281,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: wp('56%'),
     height: hp('8'),
-    marginTop: '4%',
   },
   bodyTxtCreate: {
     fontFamily: fonts.PoppinsBold,

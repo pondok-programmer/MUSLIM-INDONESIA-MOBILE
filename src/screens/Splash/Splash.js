@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   StatusBar,
+  ToastAndroid,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {fonts, images} from '../../assets';
@@ -13,22 +14,38 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Splash = ({navigation, route}) => {
+  const [hasToken, setHasToken] = useState(false);
+
   useEffect(() => {
-    const wait = ms => {
-      return new Promise(resolve => {
-        setTimeout(resolve, ms);
-      });
+    const checkForToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        return !!token;
+      } catch (error) {
+        console.error('Error reading token from AsyncStorage:', error);
+        return false;
+      }
     };
-    let mounted = true;
-    if (mounted) {
-      wait(3000).then(() => {
+
+    const timeout = setTimeout(async () => {
+      const tokenExists = await checkForToken();
+      setHasToken(tokenExists);
+
+      if (tokenExists) {
+        navigation.replace('MainNavigator');
+        console.log('Successful save Token');
+        ToastAndroid.show('Selamat datang ', ToastAndroid.SHORT);
+      } else {
         navigation.replace('Login');
-      });
-    }
+        console.log(' Nothing Token');
+      }
+    }, 3000);
+
     return () => {
-      mounted = false;
+      clearTimeout(timeout);
     };
   }, []);
   return (

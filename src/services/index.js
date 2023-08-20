@@ -93,9 +93,6 @@ const post = async (url = '', params = {}) => {
         })
           .then(res => res.json())
           .then(resJson => {
-            params.navigation.replace('MainNavigator');
-
-            // ToastAndroid.show('Selamat datang user', ToastAndroid.SHORT);
             return resJson;
           })
           .catch(err => {
@@ -232,4 +229,94 @@ const putFormData = async (url = '', params = new FormData()) => {
   return result;
 };
 
-export {get, post, postFormData, put, putFormData};
+const postReg = async (url = '', params = {}) => {
+  let newUrl = `${AppConfig.baseUrl}${url}`;
+  console.log(params, 'ini params postReg');
+  console.log('ENDPOINT...', newUrl);
+
+  let token = await AsyncStorage.getItem('token');
+  console.log('token', token);
+  let result =
+    token != null
+      ? fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type ': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          })
+      : fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            ToastAndroid.show('Akun Terdaftar', ToastAndroid.SHORT);
+            params.navigation.goBack();
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          });
+  return result;
+};
+
+const postLogout = async (url = '', params = {}) => {
+  let newUrl = `${appConfig.baseUrl}${url} `;
+  console.log(params, 'ini params postlogout');
+  console.log('ENDPOINT...', newUrl);
+
+  let token = await AsyncStorage.getItem('token');
+  console.log('token', token);
+  let result =
+    token != null
+      ? fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          })
+      : fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            AsyncStorage.removeItem('token');
+            navigation.replace('login');
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          });
+  return result;
+};
+
+export {get, post, postFormData, put, putFormData, postReg, postLogout};

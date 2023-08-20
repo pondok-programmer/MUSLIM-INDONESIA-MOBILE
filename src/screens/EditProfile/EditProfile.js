@@ -88,17 +88,16 @@ const EditProfile = ({navigation}) => {
         <View style={styles.bodyImageUser}>
           <View style={styles.bodyImageUser}>
             {gambar.uri ? (
-              <Image source={images.user} style={styles.imgUser} />
-            ) : (
               <Image
-                source={{uri: imageCamera}}
+                source={{uri: gambar.uri}}
                 style={{
                   width: wp('33%'),
                   height: hp('15%'),
                   borderRadius: 200,
-                  backgroundColor: colors.black,
                 }}
               />
+            ) : (
+              <Image source={images.user} style={styles.imgUser} />
             )}
           </View>
         </View>

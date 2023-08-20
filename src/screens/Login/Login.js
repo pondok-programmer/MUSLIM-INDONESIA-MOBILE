@@ -7,6 +7,8 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ToastAndroid,
+  Alert,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {fonts, icons, images} from '../../assets';
@@ -19,7 +21,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {GlobalContext} from '../../Store/globalContext';
 import {postLogin} from '../../services/Auth';
-// import {useAuth} from './auth'; // Import your authentication context or hook
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -27,15 +29,62 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState();
   const globalContext = useState(GlobalContext);
 
+  // !MASSIHHHHHH SALAHHHH
   // ! GET DATA API LOGIN
   const getData = async () => {
-    const result = await postLogin({email, password, navigation});
-    console.log('result...', result);
+    try {
+      // ! Validasi Email
+      if (!email.endsWith('@gmail.com')) {
+        Alert.alert('Invalid Email', 'Please enter a valid email address');
+        return;
+      }
+
+      // ! Validasi Password
+      if (!password.lenght > 8) {
+        Alert.alert('Invalid Password', 'Password minimal  8 karakter');
+        return;
+      }
+
+      const result = await postLogin({email, password, navigation});
+      console.log('result...', result);
+
+      if (result && result.token) {
+        await AsyncStorage.setItem('token', result.token);
+        console.log('Token saved successfully');
+        navigation.replace('MainNavigator');
+        ToastAndroid.show('Selamat Datang', ToastAndroid.SHORT);
+      } else if (
+        result &&
+        result.message === 'Email or password is incorrect.'
+      ) {
+        Alert.alert(
+          'Login Failed',
+          'Email or password is incorrect. Please check your credentials.',
+        );
+      } else {
+        console.log('Login failed or no token received.');
+      }
+    } catch (error) {
+      console.log('Error during login:', error);
+    }
   };
 
   useEffect(() => {
     getData();
   }, []);
+
+  const nothingPassword = () => {
+    Alert.alert('Perhatian !', ' Apakah anda lupa password ', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Ok',
+        onPress: () => navigation.navigate('ForgotPassword'),
+      },
+    ]);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -90,7 +139,7 @@ const Login = ({navigation}) => {
       {/* FORGOT PASSWORD */}
       <TouchableOpacity
         style={styles.headerForgotPassword}
-        onPress={() => navigation.navigate('ForgotPassword')}>
+        onPress={() => nothingPassword()}>
         <Text style={styles.txtForgot}>Forgot </Text>
         <Text style={styles.txtPassword}>Password?</Text>
       </TouchableOpacity>
