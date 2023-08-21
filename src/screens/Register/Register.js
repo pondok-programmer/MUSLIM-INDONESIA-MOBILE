@@ -7,6 +7,8 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Alert,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {colors, dimens} from '../../utils';
@@ -18,11 +20,12 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Fumi} from 'react-native-textinput-effects';
 import LinearGradient from 'react-native-linear-gradient';
-import {postReg} from '../../services';
+import {postRegister} from '../../services/AuthRegister';
 
 const Register = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-
+  const [secureTextEntryPassConfrim, setSecureTextEntryPassConfrim] =
+    useState(true);
   const [full_name, setFull_name] = useState();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -31,15 +34,57 @@ const Register = ({navigation}) => {
   const [email, setEmail] = useState();
 
   const Reg = async () => {
-    const result = await postReg({
-      full_name,
-      username,
-      email,
-      password,
-      password_confirmation,
-      phone_number,
-    });
-    console.log('Result...', result);
+    try {
+      // Validasi phone_number
+      if (!phone_number.startsWith('62')) {
+        Alert.alert('Perhatian!', 'Nomor telepon harus di awali dengan 62 ');
+        return;
+      }
+
+      // Validasi Email
+      if (!email.includes('@gmail.com')) {
+        Alert.alert('Perhatian!', 'Email harus mengunakan @gmail.com');
+        return;
+      }
+
+      // Validasi Password
+      if (!password.lenght > 8) {
+        Alert.alert('Perhatian!', 'Password harus minimal 8 karakter');
+        return;
+      }
+
+      // Validasi Condfrim_Password
+      if (!password_confirmation.lenght > 8) {
+        Alert.alert('Perhatian!', 'Password harus minimal 8 karakter');
+        return;
+      }
+
+      const result = await postRegister({
+        full_name,
+        username,
+        email,
+        password,
+        password_confirmation,
+        phone_number,
+        navigation,
+      });
+      console.log('result...', result);
+
+      if (result) {
+        // Tampilkan pesan sukses
+        ToastAndroid.show('Berhasil mendaftarkan akun', ToastAndroid.SHORT);
+
+        // Navigasi ke screen Login jika semua data telah diisi
+        navigation.goBack();
+      }
+    } catch (error) {
+      // Tangani kesalahan jika API tidak berfungsi atau ada masalah lain
+      console.log('Error', error);
+      // Alert.alert(
+      //   'Terjadi kesalahan',
+      //   'Terdapat masalah saat melakukan registrasi. Silahkan coba lagi nanti.',
+      // );
+    }
   };
 
   useEffect(() => {
@@ -153,14 +198,15 @@ const Register = ({navigation}) => {
           iconWidth={40}
           inputPadding={16}
           keyboardType="name-phone-pad"
-          secureTextEntry={secureTextEntry}
+          secureTextEntry={secureTextEntryPassConfrim}
           style={styles.fumiConfrimPassword}
           color={colors.black}
           onChangeText={val => SetPassword_confirmation(val)}
         />
 
         <View style={styles.bodyEye}>
-          <TouchableOpacity onPress={() => setSecureTextEntry(val => !val)}>
+          <TouchableOpacity
+            onPress={() => setSecureTextEntryPassConfrim(val => !val)}>
             <Image source={icons.eye} style={styles.eye} />
           </TouchableOpacity>
         </View>

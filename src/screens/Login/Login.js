@@ -29,7 +29,6 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState();
   const globalContext = useState(GlobalContext);
 
-  // !MASSIHHHHHH SALAHHHH
   // ! GET DATA API LOGIN
   const getData = async () => {
     try {
@@ -86,6 +85,13 @@ const Login = ({navigation}) => {
     ]);
   };
 
+  // ! SecureTextEntry
+  const togglesecureTextEntry = () => {
+    setSecureTextEntry(praveState => !praveState);
+  };
+
+  // ! Image eye
+  const eyeIcon = secureTextEntry ? icons.show : icons.eye;
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
@@ -130,8 +136,8 @@ const Login = ({navigation}) => {
           onChangeText={val => setPassword(val)}
         />
         <View style={styles.bodyEye}>
-          <TouchableOpacity onPress={() => setSecureTextEntry(val => !val)}>
-            <Image source={icons.eye} style={styles.eye} />
+          <TouchableOpacity onPress={togglesecureTextEntry}>
+            <Image source={eyeIcon} style={styles.eye} />
           </TouchableOpacity>
         </View>
       </View>
@@ -236,7 +242,9 @@ const styles = StyleSheet.create({
     right: '9%',
   },
   eye: {
-    bottom: 43,
+    bottom: 46,
+    height: 30,
+    width: 25,
   },
   headerForgotPassword: {
     flexDirection: 'row',

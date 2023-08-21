@@ -264,8 +264,6 @@ const postReg = async (url = '', params = {}) => {
         })
           .then(res => res.json())
           .then(resJson => {
-            ToastAndroid.show('Akun Terdaftar', ToastAndroid.SHORT);
-            params.navigation.goBack();
             return resJson;
           })
           .catch(err => {
@@ -275,7 +273,7 @@ const postReg = async (url = '', params = {}) => {
 };
 
 const postLogout = async (url = '', params = {}) => {
-  let newUrl = `${appConfig.baseUrl}${url} `;
+  let newUrl = `${AppConfig.baseUrl}${url} `;
   console.log(params, 'ini params postlogout');
   console.log('ENDPOINT...', newUrl);
 
@@ -309,8 +307,6 @@ const postLogout = async (url = '', params = {}) => {
         })
           .then(res => res.json())
           .then(resJson => {
-            AsyncStorage.removeItem('token');
-            navigation.replace('login');
             return resJson;
           })
           .catch(err => {

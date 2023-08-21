@@ -47,8 +47,18 @@ const Setting = ({navigation, route}) => {
 
   // ! RENDER API LOGOUT
   const logOut = async () => {
-    const result = await postLogout();
-    console.log('result...', result);
+    try {
+      const result = await postLogout();
+      console.log('result...', result);
+
+      await AsyncStorage.removeItem('token'); // Remove token from AsyncStorage
+      console.log('Token Removed');
+
+      navigation.replace('Login');
+      console.log('Suksesfull logout for application');
+    } catch (error) {
+      console.log('Errong ducing logout', error);
+    }
   };
 
   // ? ALERT WARNING
@@ -97,10 +107,9 @@ const Setting = ({navigation, route}) => {
           ]}>
           PENYIMPANAN
         </Text>
-        <View style={styles.contentStorageSaveDatas}>
-          <TouchableOpacity>
-            <Image source={icons.vectorSave} style={styles.VectorSave} />
-          </TouchableOpacity>
+
+        <TouchableOpacity style={styles.contentStorageSaveDatas}>
+          <Image source={icons.vectorSave} style={styles.VectorSave} />
           <Text
             style={[
               styles.txtSaveData,
@@ -108,7 +117,7 @@ const Setting = ({navigation, route}) => {
             ]}>
             Penyimpanan
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
 
       {/* LOG OUT */}

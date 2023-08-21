@@ -1,8 +1,8 @@
 import {postReg} from '..';
 
-const Register = params => {
+const postRegister = params => {
   console.log(params, 'post Register');
   return postReg('/api/register', params);
 };
 
-export {Register};
+export {postRegister};

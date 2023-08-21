@@ -19,35 +19,59 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Splash = ({navigation, route}) => {
   const [hasToken, setHasToken] = useState(false);
 
-  useEffect(() => {
-    const checkForToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-        return !!token;
-      } catch (error) {
-        console.error('Error reading token from AsyncStorage:', error);
-        return false;
-      }
-    };
+  const ShowToken = async () => {
+    try {
+      let result = await AsyncStorage.getItem('token');
 
-    const timeout = setTimeout(async () => {
-      const tokenExists = await checkForToken();
-      setHasToken(tokenExists);
-
-      if (tokenExists) {
+      if (result !== null && result !== '') {
+        console.log('Token...', result);
         navigation.replace('MainNavigator');
-        console.log('Successful save Token');
-        ToastAndroid.show('Selamat datang ', ToastAndroid.SHORT);
       } else {
         navigation.replace('Login');
-        console.log(' Nothing Token');
       }
-    }, 3000);
+    } catch (e) {
+      console.log('get token', e);
+    }
+  };
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      ShowToken();
+    }, 2000);
+  }, [navigation]);
+
+  // useEffect(() => {
+  //   const checkForToken = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem('token');
+  //       return !!token;
+  //     } catch (error) {
+  //       console.error('Error reading token from AsyncStorage:', error);
+  //       return false;
+  //     }
+  //   };
+
+  //   const checkTokenAndNavigation = async () => {
+  //     const tokenExists = await checkForToken();
+
+  //     if (tokenExists) {
+  //       navigation.replace('MainNavigator');
+  //       console.log('Successful save Token');
+  //       ToastAndroid.show('Selamat datang ', ToastAndroid.SHORT);
+  //     } else {
+  //       navigation.replace('Login');
+  //       console.log(' Nothing Token');
+
+  //       // Tambahkan pesan atau notifikasi bahwa pengguna harus masuk terlebih dahulu
+  //       ToastAndroid.show(
+  //         'Anda harus daftarkan akun terlebih dahulu',
+  //         ToastAndroid.LONG,
+  //       );
+  //     }
+  //   };
+  //   checkTokenAndNavigation();
+  // }, [navigation]);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />

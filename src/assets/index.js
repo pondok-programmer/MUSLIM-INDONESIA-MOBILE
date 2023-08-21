@@ -44,6 +44,8 @@ const icons = {
   right: require('../assets/icons/right.png'),
   logOut: require('../assets/icons/logOut.png'),
   goggleMap: require('../assets/icons/goggleMap.png'),
+  show: require('../assets/icons/show.png'),
+  hide: require('../assets/icons/hide.png'),
 };
 
 // !  Export all assets files
