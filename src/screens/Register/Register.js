@@ -35,27 +35,70 @@ const Register = ({navigation}) => {
 
   const Reg = async () => {
     try {
+      // Validasi Full_name
+      if (full_name.trim().length === 0) {
+        Alert.alert('Perhatian!', 'Nama lengkap harus diisi');
+        return;
+      }
+
+      // Validasi Username
+      if (!username) {
+        Alert.alert('Perhatian!', 'Username harus diisi');
+        return;
+      }
+
       // Validasi phone_number
+      if (!phone_number) {
+        Alert.alert('Perhatian!', 'Nomor telepone harus diisi');
+        return;
+      }
+
       if (!phone_number.startsWith('62')) {
         Alert.alert('Perhatian!', 'Nomor telepon harus di awali dengan 62 ');
         return;
       }
 
       // Validasi Email
+      if (!email) {
+        Alert.alert('Perhatian!', 'Email harus diisi');
+        return;
+      }
+
       if (!email.includes('@gmail.com')) {
         Alert.alert('Perhatian!', 'Email harus mengunakan @gmail.com');
         return;
       }
 
       // Validasi Password
-      if (!password.lenght > 8) {
-        Alert.alert('Perhatian!', 'Password harus minimal 8 karakter');
+      if (!password) {
+        Alert.alert('Perhatian!', 'Password harus diisi');
+        return;
+      }
+
+      if (password.length < 8) {
+        Alert.alert('Perhatian!', 'Password harus minimal 5 karakter');
         return;
       }
 
       // Validasi Condfrim_Password
-      if (!password_confirmation.lenght > 8) {
-        Alert.alert('Perhatian!', 'Password harus minimal 8 karakter');
+      if (!password_confirmation) {
+        Alert.alert('Perhatian!', 'Konfirmasi password harus diisi');
+        return;
+      }
+
+      if (password_confirmation.length < 8) {
+        Alert.alert(
+          'Perhatian!',
+          'Password confirmasi harus minimal 8 karakter',
+        );
+        return;
+      }
+
+      if (password_confirmation !== password) {
+        Alert.alert(
+          'Perhatian!',
+          'Konfirmasi password tidak sama dengan password',
+        );
         return;
       }
 
@@ -80,16 +123,26 @@ const Register = ({navigation}) => {
     } catch (error) {
       // Tangani kesalahan jika API tidak berfungsi atau ada masalah lain
       console.log('Error', error);
-      // Alert.alert(
-      //   'Terjadi kesalahan',
-      //   'Terdapat masalah saat melakukan registrasi. Silahkan coba lagi nanti.',
-      // );
     }
   };
 
   useEffect(() => {
     Reg();
   }, []);
+
+  // ! SecureTextEntry password
+  const togglesecureTextEntry = () => {
+    setSecureTextEntry(praveState => !praveState);
+  };
+
+  // ! SecureTextEntry Confrim_password
+  const togglesecureTextEntryConfrim_password = () => {
+    setSecureTextEntryPassConfrim(praveState => !praveState);
+  };
+
+  // ! Image eye
+  const eyeIcon = secureTextEntry ? icons.show : icons.eye;
+  const eyeIconConfrim = secureTextEntryPassConfrim ? icons.show : icons.eye;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -184,8 +237,8 @@ const Register = ({navigation}) => {
         />
 
         <View style={styles.bodyEyePassword}>
-          <TouchableOpacity onPress={() => setSecureTextEntry(val => !val)}>
-            <Image source={icons.eye} style={styles.eye} />
+          <TouchableOpacity onPress={togglesecureTextEntry}>
+            <Image source={eyeIcon} style={styles.eye} />
           </TouchableOpacity>
         </View>
 
@@ -205,9 +258,8 @@ const Register = ({navigation}) => {
         />
 
         <View style={styles.bodyEye}>
-          <TouchableOpacity
-            onPress={() => setSecureTextEntryPassConfrim(val => !val)}>
-            <Image source={icons.eye} style={styles.eye} />
+          <TouchableOpacity onPress={togglesecureTextEntryConfrim_password}>
+            <Image source={eyeIconConfrim} style={styles.eye} />
           </TouchableOpacity>
         </View>
 
@@ -297,6 +349,7 @@ const styles = StyleSheet.create({
   },
   fumiPassword: {
     marginHorizontal: 20,
+    marginVertical: 10,
     borderRadius: 10,
     marginTop: '2%',
     height: hp('10%'),
@@ -304,7 +357,6 @@ const styles = StyleSheet.create({
   fumiConfrimPassword: {
     marginHorizontal: 20,
     borderRadius: 10,
-    marginTop: '2%',
     height: hp('10%'),
     bottom: 22,
   },
@@ -318,7 +370,9 @@ const styles = StyleSheet.create({
     bottom: 20,
   },
   eye: {
-    bottom: 43,
+    bottom: 46,
+    height: 30,
+    width: 25,
   },
   contentCreate: {
     justifyContent: 'center',

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ToastAndroid,
   Alert,
+  Dimensions,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {fonts, icons, images} from '../../assets';
@@ -23,6 +24,9 @@ import {GlobalContext} from '../../Store/globalContext';
 import {postLogin} from '../../services/Auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const width = Dimensions.get('screen').width;
+const height = Dimensions.get('screen').height;
+
 const Login = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [email, setEmail] = useState();
@@ -33,13 +37,23 @@ const Login = ({navigation}) => {
   const getData = async () => {
     try {
       // ! Validasi Email
+      if (!email) {
+        Alert.alert('Perhatian!', 'Email harus diisi');
+        return;
+      }
+
       if (!email.endsWith('@gmail.com')) {
         Alert.alert('Invalid Email', 'Please enter a valid email address');
         return;
       }
 
       // ! Validasi Password
-      if (!password.lenght > 8) {
+      if (!password) {
+        Alert.alert('Perhatian!', 'Password harus diisi');
+        return;
+      }
+
+      if (password.lenght < 8) {
         Alert.alert('Invalid Password', 'Password minimal  8 karakter');
         return;
       }
@@ -151,7 +165,12 @@ const Login = ({navigation}) => {
       </TouchableOpacity>
 
       {/* LOGIN */}
-      <TouchableOpacity onPress={() => getData()}>
+      <TouchableOpacity
+        onPress={() => getData()}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.login}>
           <Text style={styles.txtLogin}>Let's Login</Text>
         </LinearGradient>
@@ -265,10 +284,10 @@ const styles = StyleSheet.create({
   login: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 95,
+    // marginHorizontal: 95,
     borderRadius: 100,
-    height: hp('8%'),
-    width: wp('56%'),
+    height: height / 11,
+    width: width / 2,
   },
   txtLogin: {
     fontFamily: fonts.PoppinsBold,
@@ -307,8 +326,8 @@ const styles = StyleSheet.create({
     width: wp('40%'),
     borderWidth: 2,
     color: colors.black,
-    bottom: 0,
-    marginTop: '22%',
+    bottom: 10,
+    marginTop: '18%',
     marginLeft: 128,
     borderRadius: 20,
   },
