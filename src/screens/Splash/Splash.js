@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   StatusBar,
+  ToastAndroid,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {fonts, images} from '../../assets';
@@ -13,24 +14,64 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Splash = ({navigation, route}) => {
-  useEffect(() => {
-    const wait = ms => {
-      return new Promise(resolve => {
-        setTimeout(resolve, ms);
-      });
-    };
-    let mounted = true;
-    if (mounted) {
-      wait(3000).then(() => {
+  const [hasToken, setHasToken] = useState(false);
+
+  const ShowToken = async () => {
+    try {
+      let result = await AsyncStorage.getItem('token');
+
+      if (result !== null && result !== '') {
+        console.log('Token...', result);
+        navigation.replace('MainNavigator');
+      } else {
         navigation.replace('Login');
-      });
+      }
+    } catch (e) {
+      console.log('get token', e);
     }
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      ShowToken();
+    }, 2000);
+  }, [navigation]);
+
+  // useEffect(() => {
+  //   const checkForToken = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem('token');
+  //       return !!token;
+  //     } catch (error) {
+  //       console.error('Error reading token from AsyncStorage:', error);
+  //       return false;
+  //     }
+  //   };
+
+  //   const checkTokenAndNavigation = async () => {
+  //     const tokenExists = await checkForToken();
+
+  //     if (tokenExists) {
+  //       navigation.replace('MainNavigator');
+  //       console.log('Successful save Token');
+  //       ToastAndroid.show('Selamat datang ', ToastAndroid.SHORT);
+  //     } else {
+  //       navigation.replace('Login');
+  //       console.log(' Nothing Token');
+
+  //       // Tambahkan pesan atau notifikasi bahwa pengguna harus masuk terlebih dahulu
+  //       ToastAndroid.show(
+  //         'Anda harus daftarkan akun terlebih dahulu',
+  //         ToastAndroid.LONG,
+  //       );
+  //     }
+  //   };
+  //   checkTokenAndNavigation();
+  // }, [navigation]);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />

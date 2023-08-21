@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   View,
   SafeAreaView,
@@ -20,9 +20,12 @@ import {
 } from 'react-native-responsive-screen';
 import LinearGradient from 'react-native-linear-gradient';
 import {useRef} from 'react';
+import {postLogout} from '../../services';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Setting = ({navigation, route}) => {
-  const drawerLeft = useRef(DrawerLayoutAndroid);
+  const [loggedOut, setLoggedOut] = useState();
+  const drawerLeft = useRef(null);
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
 
@@ -42,7 +45,23 @@ const Setting = ({navigation, route}) => {
 
   console.log(globalContext.state);
 
-  // ? WARNING
+  // ! RENDER API LOGOUT
+  const logOut = async () => {
+    try {
+      const result = await postLogout();
+      console.log('result...', result);
+
+      await AsyncStorage.removeItem('token'); // Remove token from AsyncStorage
+      console.log('Token Removed');
+
+      navigation.replace('Login');
+      console.log('Suksesfull logout for application');
+    } catch (error) {
+      console.log('Errong ducing logout', error);
+    }
+  };
+
+  // ? ALERT WARNING
   const warning = () => {
     Alert.alert('Perhatian !', 'Apakah anda ingin keluar', [
       {
@@ -50,6 +69,7 @@ const Setting = ({navigation, route}) => {
       },
       {
         text: 'Ok',
+        onPress: () => logOut(),
       },
     ]);
   };
@@ -87,10 +107,9 @@ const Setting = ({navigation, route}) => {
           ]}>
           PENYIMPANAN
         </Text>
-        <View style={styles.contentStorageSaveDatas}>
-          <TouchableOpacity>
-            <Image source={icons.vectorSave} style={styles.VectorSave} />
-          </TouchableOpacity>
+
+        <TouchableOpacity style={styles.contentStorageSaveDatas}>
+          <Image source={icons.vectorSave} style={styles.VectorSave} />
           <Text
             style={[
               styles.txtSaveData,
@@ -98,7 +117,7 @@ const Setting = ({navigation, route}) => {
             ]}>
             Penyimpanan
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
 
       {/* LOG OUT */}
@@ -110,10 +129,10 @@ const Setting = ({navigation, route}) => {
           ]}>
           Log Out
         </Text>
-        <View style={styles.contentStorageSaveDatas}>
-          <TouchableOpacity onPress={() => warning()}>
-            <Image source={icons.logOut} style={styles.VectorLogout} />
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.contentStorageSaveDatas}
+          onPress={() => warning()}>
+          <Image source={icons.logOut} style={styles.VectorLogout} />
           <Text
             style={[
               styles.txtSaveData,
@@ -121,7 +140,7 @@ const Setting = ({navigation, route}) => {
             ]}>
             Log Out
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -197,15 +216,6 @@ const Setting = ({navigation, route}) => {
             </TouchableOpacity>
             <View style={styles.line} />
           </View>
-
-          {/* BACKGROUND FOR PAGE SETTING  */}
-          {/* <View style={styles.backgroound1} />
-          <View
-            style={[
-              styles.backgroound2,
-              {backgroundColor: dark ? colors.black : colors.white},
-            ]}
-          /> */}
 
           {/* CONTENT PROFILE */}
           <View

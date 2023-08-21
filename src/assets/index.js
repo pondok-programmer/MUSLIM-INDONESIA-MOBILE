@@ -19,6 +19,8 @@ const images = {
   posterkajian: require('../assets/images/posterKajian.png'),
   logoMuslimIndo: require('../assets/images/logoMuslimIndo.jpg'),
   BgLogo: require('../assets/images/BgLogo.png'),
+  UstadzFarid: require('../assets/images/UstadzFarid.png'),
+  UstadzKiki: require('../assets/images/UstadzKiki.png'),
 };
 
 // ! Icons
@@ -42,6 +44,8 @@ const icons = {
   right: require('../assets/icons/right.png'),
   logOut: require('../assets/icons/logOut.png'),
   goggleMap: require('../assets/icons/goggleMap.png'),
+  show: require('../assets/icons/show.png'),
+  hide: require('../assets/icons/hide.png'),
 };
 
 // !  Export all assets files

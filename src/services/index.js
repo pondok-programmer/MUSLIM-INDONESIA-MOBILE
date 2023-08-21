@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ToastAndroid} from 'react-native';
 
 const AppConfig = {
-  baseUrl: 'https://71c4-2001-448a-4044-2289-deb-19a7-9b9e-7dcf.ngrok-free.app',
+  baseUrl: 'http://muslimindo.muhammadiyahexpo.com',
 };
 
 // const AppConfig = {
@@ -78,7 +78,6 @@ const post = async (url = '', params = {}) => {
         })
           .then(res => res.json())
           .then(resJson => {
-            // console.log(resJson);
             return resJson;
           })
           .catch(err => {
@@ -94,8 +93,6 @@ const post = async (url = '', params = {}) => {
         })
           .then(res => res.json())
           .then(resJson => {
-            params.navigation.replace('MainNavigator');
-            ToastAndroid.show('Selamat datang user', ToastAndroid.SHORT);
             return resJson;
           })
           .catch(err => {
@@ -232,4 +229,90 @@ const putFormData = async (url = '', params = new FormData()) => {
   return result;
 };
 
-export {get, post, postFormData, put, putFormData};
+const postReg = async (url = '', params = {}) => {
+  let newUrl = `${AppConfig.baseUrl}${url}`;
+  console.log(params, 'ini params postReg');
+  console.log('ENDPOINT...', newUrl);
+
+  let token = await AsyncStorage.getItem('token');
+  console.log('token', token);
+  let result =
+    token != null
+      ? fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type ': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          })
+      : fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          });
+  return result;
+};
+
+const postLogout = async (url = '', params = {}) => {
+  let newUrl = `${AppConfig.baseUrl}${url} `;
+  console.log(params, 'ini params postlogout');
+  console.log('ENDPOINT...', newUrl);
+
+  let token = await AsyncStorage.getItem('token');
+  console.log('token', token);
+  let result =
+    token != null
+      ? fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          })
+      : fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          });
+  return result;
+};
+
+export {get, post, postFormData, put, putFormData, postReg, postLogout};

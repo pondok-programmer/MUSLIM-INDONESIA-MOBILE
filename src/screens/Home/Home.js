@@ -10,6 +10,7 @@ import {
   TextInput,
   ScrollView,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {fonts, icons, images} from '../../assets';
@@ -22,20 +23,49 @@ import {
 import {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import TopTab from './TopTab';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
+import DataCarousel from './DataCarousel';
+import {useRef} from 'react';
+// import Pagination from './Pagination';
 
 const Home = ({navigation, route, item}) => {
   const [notifikation, setNotifikation] = useState();
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
+  const {width: screenWidth} = Dimensions.get('window');
+  const sliderWidth = screenWidth;
+  const itemWidth = screenWidth * 0.8;
+  const carouselPagination = useRef(null);
+  const [index, setIndex] = useState(0);
 
-  const getData = async () => {
-    const result = await getMoviesFromApi();
-    console.log('result...', result);
-  };
+  // ? RENDER CAROUSEL
+  const renderItem = ({item, pagination}) => (
+    <LinearGradient
+      colors={['#40EC15', '#688F16']}
+      style={styles.contentCarosel}>
+      <View style={{flexDirection: 'row'}}>
+        <Image source={item.imageUstad} style={styles.imgCarosel} />
+        <View style={styles.contentCard}>
+          <Text style={styles.bodyTextTitle}>{item.title}</Text>
+          <Text style={styles.bodyTextChild}>{item.body}</Text>
+        </View>
+      </View>
+      <View style={styles.bottomDate}>
+        <Image source={item.iconCalendar} style={styles.viewCalendar} />
+        <Text style={styles.txtDate}>{item.textClock}</Text>
+      </View>
+    </LinearGradient>
+  );
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // // ? GET DATA API LOGIN
+  // const getData = async () => {
+  //   const result = await getMoviesFromApi();
+  //   console.log('result...', result);
+  // };
+
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -139,27 +169,32 @@ const Home = ({navigation, route, item}) => {
           </View>
 
           {/* CAROSEL KAJIAN */}
-          <LinearGradient
-            colors={['#40EC15', '#688F16']}
-            style={styles.contentCarosel}>
-            <View style={{flexDirection: 'row'}}>
-              <Image source={images.kiayEen} style={styles.imgCarosel} />
-              <View style={styles.contentCard}>
-                <Text style={styles.bodyTextTitle}>
-                  Dr. Adi Pratama Larisindo
-                </Text>
-                <Text style={styles.bodyTextChild}>
-                  Pentingnya islam untuk dunia ini
-                </Text>
-              </View>
-            </View>
-            <View style={styles.bottomDate}>
-              <View style={styles.viewBottom}>
-                <Image source={icons.calendar} style={styles.viewCalendar} />
-                <Text style={styles.txtDate}>28, juni, 19.00</Text>
-              </View>
-            </View>
-          </LinearGradient>
+          <Carousel
+            ref={carouselPagination}
+            layout="default"
+            data={DataCarousel}
+            renderItem={renderItem}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+            onSnapToItem={index => setIndex(index)}
+          />
+          <Pagination
+            dotsLength={DataCarousel.length}
+            carouselRef={carouselPagination}
+            activeDotIndex={index}
+            dotStyle={{
+              width: 10,
+              height: 10,
+              borderRadius: 10,
+              bottom: 10,
+              backgroundColor: colors.white,
+            }}
+            inactiveDotStyle={{
+              backgroundColor: colors.white,
+            }}
+            inactiveDotOpacity={0.2}
+            inactiveDotScale={0.8}
+          />
 
           {/* TOP TAB */}
           <View style={styles.bodyTopTab}>
@@ -251,40 +286,42 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   contentCarosel: {
-    marginHorizontal: 20,
-    height: '11%',
+    height: 180,
     borderRadius: 10,
+    padding: 20,
   },
   imgCarosel: {
-    height: hp('16%'),
-    width: wp('22%'),
-    marginLeft: 17,
+    height: hp('20%'),
+    width: wp('27%'),
   },
   contentCard: {
-    marginTop: '6%',
+    // backgroundColor: colors.blue,
+    height: hp('10%'),
   },
   bodyTextTitle: {
-    fontSize: dimens.l,
-    fontFamily: fonts.PoppinsMedium,
-    color: colors.white,
+    fontSize: dimens.xl,
+    fontFamily: fonts.PoppinsSemiBold,
+    color: colors.black,
   },
   bodyTextChild: {
     fontSize: dimens.s,
-    fontFamily: fonts.PoppinsMedium,
-    color: colors.white,
+    fontFamily: fonts.PoppinsRegular,
+    color: colors.black,
+    textAlign: 'justify',
+    textAlignVertical: 'auto',
+    width: wp('48%'),
+    marginVertical: 6,
   },
   bottomDate: {
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: 37,
+    flexDirection: 'row',
     backgroundColor: colors.white,
-    marginLeft: '59%',
     height: hp('4%'),
     width: wp('35%'),
     borderRadius: 10,
-  },
-  viewBottom: {
-    flexDirection: 'row',
+    marginLeft: '53%',
+    bottom: 60,
   },
   viewCalendar: {
     height: hp('3%'),
@@ -307,7 +344,7 @@ const styles = StyleSheet.create({
   bodyTopTab: {
     backgroundColor: colors.white,
     height: hp('100%'),
-    marginTop: '20%',
+    marginTop: '3%',
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
   },

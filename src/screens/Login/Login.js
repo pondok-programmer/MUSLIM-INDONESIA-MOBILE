@@ -7,6 +7,8 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ToastAndroid,
+  Alert,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {fonts, icons, images} from '../../assets';
@@ -19,6 +21,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {GlobalContext} from '../../Store/globalContext';
 import {postLogin} from '../../services/Auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -28,14 +31,67 @@ const Login = ({navigation}) => {
 
   // ! GET DATA API LOGIN
   const getData = async () => {
-    const result = await postLogin({email, password, navigation});
-    console.log('result...', result);
+    try {
+      // ! Validasi Email
+      if (!email.endsWith('@gmail.com')) {
+        Alert.alert('Invalid Email', 'Please enter a valid email address');
+        return;
+      }
+
+      // ! Validasi Password
+      if (!password.lenght > 8) {
+        Alert.alert('Invalid Password', 'Password minimal  8 karakter');
+        return;
+      }
+
+      const result = await postLogin({email, password, navigation});
+      console.log('result...', result);
+
+      if (result && result.token) {
+        await AsyncStorage.setItem('token', result.token);
+        console.log('Token saved successfully');
+        navigation.replace('MainNavigator');
+        ToastAndroid.show('Selamat Datang', ToastAndroid.SHORT);
+      } else if (
+        result &&
+        result.message === 'Email or password is incorrect.'
+      ) {
+        Alert.alert(
+          'Login Failed',
+          'Email or password is incorrect. Please check your credentials.',
+        );
+      } else {
+        console.log('Login failed or no token received.');
+      }
+    } catch (error) {
+      console.log('Error during login:', error);
+    }
   };
 
   useEffect(() => {
     getData();
   }, []);
 
+  const nothingPassword = () => {
+    Alert.alert('Perhatian !', ' Apakah anda lupa password ', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Ok',
+        onPress: () => navigation.navigate('ForgotPassword'),
+      },
+    ]);
+  };
+
+  // ! SecureTextEntry
+  const togglesecureTextEntry = () => {
+    setSecureTextEntry(praveState => !praveState);
+  };
+
+  // ! Image eye
+  const eyeIcon = secureTextEntry ? icons.show : icons.eye;
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
@@ -80,8 +136,8 @@ const Login = ({navigation}) => {
           onChangeText={val => setPassword(val)}
         />
         <View style={styles.bodyEye}>
-          <TouchableOpacity onPress={() => setSecureTextEntry(val => !val)}>
-            <Image source={icons.eye} style={styles.eye} />
+          <TouchableOpacity onPress={togglesecureTextEntry}>
+            <Image source={eyeIcon} style={styles.eye} />
           </TouchableOpacity>
         </View>
       </View>
@@ -89,13 +145,13 @@ const Login = ({navigation}) => {
       {/* FORGOT PASSWORD */}
       <TouchableOpacity
         style={styles.headerForgotPassword}
-        onPress={() => navigation.navigate('ForgotPassword')}>
+        onPress={() => nothingPassword()}>
         <Text style={styles.txtForgot}>Forgot </Text>
         <Text style={styles.txtPassword}>Password?</Text>
       </TouchableOpacity>
 
       {/* LOGIN */}
-      <TouchableOpacity onPress={() => navigation.navigate('MainNavigator')}>
+      <TouchableOpacity onPress={() => getData()}>
         <LinearGradient colors={['#40EC15', '#688F16']} style={styles.login}>
           <Text style={styles.txtLogin}>Let's Login</Text>
         </LinearGradient>
@@ -186,7 +242,9 @@ const styles = StyleSheet.create({
     right: '9%',
   },
   eye: {
-    bottom: 43,
+    bottom: 46,
+    height: 30,
+    width: 25,
   },
   headerForgotPassword: {
     flexDirection: 'row',
