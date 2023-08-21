@@ -37,7 +37,7 @@ const Login = ({navigation}) => {
   const getData = async () => {
     try {
       // ! Validasi Email
-      if (!email) {
+      if (email.trim().length === 0) {
         Alert.alert('Perhatian!', 'Email harus diisi');
         return;
       }
@@ -72,7 +72,7 @@ const Login = ({navigation}) => {
       ) {
         Alert.alert(
           'Login Failed',
-          'Email or password is incorrect. Please check your credentials.',
+          'Email or password is incorrect. Check kembali email dan password anda.',
         );
       } else {
         console.log('Login failed or no token received.');
