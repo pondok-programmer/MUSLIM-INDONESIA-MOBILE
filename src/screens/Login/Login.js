@@ -284,7 +284,6 @@ const styles = StyleSheet.create({
   login: {
     justifyContent: 'center',
     alignItems: 'center',
-    // marginHorizontal: 95,
     borderRadius: 100,
     height: height / 11,
     width: width / 2,
@@ -326,8 +325,8 @@ const styles = StyleSheet.create({
     width: wp('40%'),
     borderWidth: 2,
     color: colors.black,
-    bottom: 10,
-    marginTop: '18%',
+    bottom: 3,
+    marginTop: '16%',
     marginLeft: 128,
     borderRadius: 20,
   },

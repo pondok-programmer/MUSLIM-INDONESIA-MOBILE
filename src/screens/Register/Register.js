@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   ToastAndroid,
+  Dimensions,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {colors, dimens} from '../../utils';
@@ -21,6 +22,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Fumi} from 'react-native-textinput-effects';
 import LinearGradient from 'react-native-linear-gradient';
 import {postRegister} from '../../services/AuthRegister';
+
+const width = Dimensions.get('screen').width;
+const height = Dimensions.get('screen').height;
 
 const Register = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -76,7 +80,7 @@ const Register = ({navigation}) => {
       }
 
       if (password.length < 8) {
-        Alert.alert('Perhatian!', 'Password harus minimal 5 karakter');
+        Alert.alert('Perhatian!', 'Password harus minimal 8 karakter');
         return;
       }
 
@@ -99,6 +103,19 @@ const Register = ({navigation}) => {
           'Perhatian!',
           'Konfirmasi password tidak sama dengan password',
         );
+        return;
+      }
+
+      // Valdasi semua input disini
+      if (
+        !full_name ||
+        !username ||
+        !phone_number ||
+        !email ||
+        !password ||
+        !password_confirmation
+      ) {
+        Alert.alert('Perhatian!', 'Anda harus mengisi semua input');
         return;
       }
 
@@ -236,6 +253,7 @@ const Register = ({navigation}) => {
           onChangeText={val => setPassword(val)}
         />
 
+        {/*ICON EYE */}
         <View style={styles.bodyEyePassword}>
           <TouchableOpacity onPress={togglesecureTextEntry}>
             <Image source={eyeIcon} style={styles.eye} />
@@ -257,6 +275,7 @@ const Register = ({navigation}) => {
           onChangeText={val => SetPassword_confirmation(val)}
         />
 
+        {/*ICON EYE */}
         <View style={styles.bodyEye}>
           <TouchableOpacity onPress={togglesecureTextEntryConfrim_password}>
             <Image source={eyeIconConfrim} style={styles.eye} />
@@ -264,7 +283,9 @@ const Register = ({navigation}) => {
         </View>
 
         {/* FOOTER */}
-        <TouchableOpacity onPress={() => Reg()}>
+        <TouchableOpacity
+          onPress={() => Reg()}
+          style={{justifyContent: 'center', alignItems: 'center'}}>
           <LinearGradient
             colors={['#40EC15', '#688F16']}
             style={styles.contentCreate}>
@@ -377,10 +398,9 @@ const styles = StyleSheet.create({
   contentCreate: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 95,
     borderRadius: 100,
-    width: wp('56%'),
-    height: hp('8'),
+    width: width / 2,
+    height: height / 11,
   },
   bodyTxtCreate: {
     fontFamily: fonts.PoppinsBold,
