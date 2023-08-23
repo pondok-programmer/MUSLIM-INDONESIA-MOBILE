@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -31,7 +31,7 @@ const Login = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const globalContext = useState(GlobalContext);
+  const globalContext = useContext(GlobalContext);
 
   // ! GET DATA API LOGIN
   const getData = async () => {
@@ -47,13 +47,18 @@ const Login = ({navigation}) => {
         return;
       }
 
+      if (email !== email.toLowerCase()) {
+        Alert.alert('Perhatian!', 'Email harus mengunakan huruf kecil');
+        return;
+      }
+
       // ! Validasi Password
       if (!password) {
         Alert.alert('Perhatian!', 'Password harus diisi');
         return;
       }
 
-      if (password.lenght < 8) {
+      if (password.length < 8) {
         Alert.alert('Invalid Password', 'Password minimal  8 karakter');
         return;
       }
@@ -82,9 +87,9 @@ const Login = ({navigation}) => {
     }
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   const nothingPassword = () => {
     Alert.alert('Perhatian !', ' Apakah anda lupa password ', [
@@ -191,7 +196,9 @@ const Login = ({navigation}) => {
       </View>
 
       {/* LINE */}
-      <View style={styles.line} />
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={styles.line} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -268,8 +275,8 @@ const styles = StyleSheet.create({
   headerForgotPassword: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginRight: 30,
-    bottom: 34,
+    marginRight: 22,
+    bottom: 40,
   },
   txtForgot: {
     fontFamily: fonts.PoppinsMedium,
@@ -296,7 +303,7 @@ const styles = StyleSheet.create({
   bodyConnect: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '4%',
+    marginTop: '5%',
   },
   txtConnect: {
     fontSize: dimens.m,
@@ -306,11 +313,12 @@ const styles = StyleSheet.create({
   Goggle: {
     width: wp('10%'),
     height: hp('5%'),
+    marginTop: '2%',
   },
   createAccount: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '6%',
+    marginTop: '3%',
   },
   txtQuestions: {
     color: colors.black,
@@ -322,12 +330,11 @@ const styles = StyleSheet.create({
     fontSize: dimens.m,
   },
   line: {
-    width: wp('40%'),
-    borderWidth: 2,
+    width: width / 2,
+    borderWidth: 1.8,
     color: colors.black,
     bottom: 3,
     marginTop: '16%',
-    marginLeft: 128,
     borderRadius: 20,
   },
 });

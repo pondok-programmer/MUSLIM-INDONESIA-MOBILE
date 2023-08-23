@@ -15,7 +15,6 @@ import {
 import {colors, dimens} from '../../utils';
 import {fonts, icons, images} from '../../assets';
 import {GlobalContext} from '../../Store/globalContext';
-import {getMoviesFromApi} from '../../services/TestConsume';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -26,9 +25,8 @@ import TopTab from './TopTab';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import DataCarousel from './DataCarousel';
 import {useRef} from 'react';
-// import Pagination from './Pagination';
 
-const Home = ({navigation, route, item}) => {
+const Home = ({navigation, route, item, data}) => {
   const [notifikation, setNotifikation] = useState();
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
@@ -56,6 +54,20 @@ const Home = ({navigation, route, item}) => {
       </View>
     </LinearGradient>
   );
+
+  useEffect(() => {
+    const timerCarousel = setInterval(() => {
+      if (carouselPagination.current) {
+        const nextIndex = (index + 1) % DataCarousel.length;
+        carouselPagination.current.snapToItem(nextIndex);
+        setIndex(nextIndex);
+      }
+    }, 2000);
+
+    return () => {
+      clearInterval(timerCarousel);
+    };
+  }, [index]);
 
   // // ? GET DATA API LOGIN
   // const getData = async () => {
@@ -135,7 +147,7 @@ const Home = ({navigation, route, item}) => {
                     color: dark ? colors.white : colors.black,
                   },
                 ]}>
-                Rafi Zimraan
+                {/* {username} */}
               </Text>
 
               {/* NOTIFICATION & IAMGE USER */}

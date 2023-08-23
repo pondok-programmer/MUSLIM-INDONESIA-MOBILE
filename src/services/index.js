@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ToastAndroid} from 'react-native';
 
 const AppConfig = {
-  baseUrl: 'http://muslimindo.muhammadiyahexpo.com',
+  baseUrl: 'https://muslimindo.muhammadiyahexpo.com',
 };
 
 // const AppConfig = {

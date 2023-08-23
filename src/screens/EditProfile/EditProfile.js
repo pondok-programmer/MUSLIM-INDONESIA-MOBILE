@@ -21,7 +21,8 @@ import {useContext} from 'react';
 import {GlobalContext} from '../../Store/globalContext';
 import {fonts, icons, images} from '../../assets';
 import LinearGradient from 'react-native-linear-gradient';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
+// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -39,31 +40,113 @@ const EditProfile = ({navigation}) => {
 
   // ! IMAGES PICKER
   // {' CAMERA'}
-  const openCamera = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo', // 'Images' should be changed to 'photo'
+  // const openCamera = () => {
+  //   launchImageLibrary(
+  //     {
+  //       mediaType: 'photo', // 'Images' should be changed to 'photo'
+  //       quality: 0.1,
+  //     },
+  //     result => {
+  //       setImageCamera(result.uri);
+  //       console.log(result.uri);
+  //     },
+  //   );
+  // };
+
+  // // {' GALERLY'}
+  // const openGallery = () => {
+  //   launchImageLibrary(
+  //     {
+  //       mediaType: 'photo',
+  //       quality: 0.1,
+  //     },
+  //     result => {
+  //       console.log(result);
+  //     },
+  //   );
+  // };
+
+  // Function to handle the image picker response
+  const handleImagePickerResponse = response => {
+    if (response.didCancel) {
+      console.log('Pemilihan gambar dibatalkan');
+    } else if (response.error) {
+      console.log('ImagePicker error...', response.error);
+    } else {
+      // Pengecekan properti uri
+      if (response.uri) {
+        const {uri, name, type} = response;
+        setGambar({uri, name, type});
+        console.log('gambar di terima');
+        console.log(response.uri);
+        // setGambar(response.uri);
+      } else {
+        console.log('Properti uri tidak ada dalam respons');
+      }
+    }
+  };
+
+  // Open the camera or gallery based on the type
+  const openImagePIcker = type => {
+    if (type === 'capture' || type === 'gallery') {
+      const options = {
+        mediaType: 'photo',
         quality: 0.1,
-      },
-      result => {
-        setImageCamera(result.uri);
-        console.log(result.uri);
-      },
+      };
+
+      if (type === 'capture') {
+        ImagePicker.launchCamera(options, handleImagePickerResponse);
+      } else if (type === 'gallery') {
+        ImagePicker.launchImageLibrary(options, handleImagePickerResponse);
+      }
+    } else {
+      console.log('Invalid image picker type ');
+    }
+  };
+
+  // Function to open the image picker options
+  const openImagePickerOptions = () => {
+    Alert.alert(
+      'Pilih sumber gambar',
+      'Pilih sumber gambar dari :',
+      [
+        {
+          text: 'Batal',
+          style: 'cancel',
+        },
+        {
+          text: 'Galery',
+          onPress: () => openImagePIcker('gallery'),
+        },
+        {
+          text: 'Kamera',
+          onPress: () => openImagePIcker('capture'),
+        },
+      ],
+      {cancelable: true},
     );
   };
 
-  // {' GALERLY'}
-  const openGallery = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        quality: 0.1,
-      },
-      result => {
-        console.log(result);
-      },
-    );
-  };
+  // ! tips 2
+  // const handleImagePickerResponse = response => {
+  //   if (response.didCancel) {
+  //     console.log('Pemilihan gambar dibatalkan');
+  //   } else if (response.error) {
+  //     console.log('ImagePicker error...', response.error);
+  //   } else if (response.assets && response.assets.length > 0) {
+  //     const selectedImage = response.assets[0];
+  //     setGambar(selectedImage.uri);
+  //     console.log('Gambar diterima:', selectedImage.uri);
+  //   }
+  // };
+  // const openImagePicker = () => {
+  //   const options = {
+  //     mediaType: 'photo',
+  //     quality: 0.1,
+  //   };
+
+  //   launchImageLibrary(options, handleImagePickerResponse);
+  // };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
@@ -87,26 +170,23 @@ const EditProfile = ({navigation}) => {
         {/* IMG USER */}
         <View style={styles.bodyImageUser}>
           <View style={styles.bodyImageUser}>
-            {gambar.uri ? (
-              <Image
-                source={{uri: gambar.uri}}
-                style={{
-                  width: wp('33%'),
-                  height: hp('15%'),
-                  borderRadius: 200,
-                }}
-              />
-            ) : (
-              <Image source={images.user} style={styles.imgUser} />
-            )}
+            <Image
+              source={gambar.uri ? {uri: gambar.uri} : images.user}
+              style={{
+                width: wp('33%'),
+                height: hp('15%'),
+                borderRadius: 200,
+                // backgroundColor: colors.blue,
+              }}
+            />
+            {/* <Image source={images.user} style={styles.imgUser} /> */}
           </View>
         </View>
-
         {/* VECTOR TAKE CAMERA & GALERLY  */}
         <View style={styles.bodyInputImageGallery}>
           <TouchableOpacity
             style={styles.TochableVector}
-            onPress={() => openCamera()}>
+            onPress={() => openImagePickerOptions()}>
             <Image source={icons.VectorTambah} style={styles.imgVector} />
           </TouchableOpacity>
         </View>
