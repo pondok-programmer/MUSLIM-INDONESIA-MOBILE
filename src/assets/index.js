@@ -46,6 +46,7 @@ const icons = {
   goggleMap: require('../assets/icons/goggleMap.png'),
   show: require('../assets/icons/show.png'),
   hide: require('../assets/icons/hide.png'),
+  telephone: require('../assets/icons/telephone.png'),
 };
 
 // !  Export all assets files

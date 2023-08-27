@@ -1,76 +1,70 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
   View,
+  Text,
+  SafeAreaView,
+  Keyboard,
+  Alert,
+  StyleSheet,
+  Dimensions,
+  StatusBar,
   Image,
   TouchableOpacity,
   ToastAndroid,
-  Alert,
-  Dimensions,
 } from 'react-native';
-import {colors, dimens} from '../../utils';
-import {fonts, icons, images} from '../../assets';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Fumi} from 'react-native-textinput-effects';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import LinearGradient from 'react-native-linear-gradient';
-import {GlobalContext} from '../../Store/globalContext';
-import {postLogin} from '../../services/Auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Input, Loader} from '../../components';
+import {colors, dimens} from '../../utils';
+import {fonts, icons, images} from '../../assets';
+import LinearGradient from 'react-native-linear-gradient';
+import {postLogin} from '../../services/Auth';
 
-const width = Dimensions.get('screen').width;
 const height = Dimensions.get('screen').height;
+const width = Dimensions.get('screen').width;
 
 const Login = ({navigation}) => {
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [errors, setErrors] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const globalContext = useContext(GlobalContext);
 
-  // ! GET DATA API LOGIN
-  const getData = async () => {
+  const handleLogin = async () => {
+    Keyboard.dismiss();
+
+    if (!email || !isValidEmail(email)) {
+      handleError(!email ? 'Please input email' : 'Invalid email', 'email');
+      return;
+    }
+
+    if (!password || password.length < 8) {
+      handleError(
+        !password
+          ? 'Please input password'
+          : 'Password must be at least 8 characters long',
+        'password',
+      );
+      return;
+    }
+
     try {
-      // ! Validasi Email
-      if (email.trim().length === 0) {
-        Alert.alert('Perhatian!', 'Email harus diisi');
-        return;
-      }
+      setLoading(true);
 
-      if (!email.endsWith('@gmail.com')) {
-        Alert.alert('Invalid Email', 'Please enter a valid email address');
-        return;
-      }
-
-      if (email !== email.toLowerCase()) {
-        Alert.alert('Perhatian!', 'Email harus mengunakan huruf kecil');
-        return;
-      }
-
-      // ! Validasi Password
-      if (!password) {
-        Alert.alert('Perhatian!', 'Password harus diisi');
-        return;
-      }
-
-      if (password.length < 8) {
-        Alert.alert('Invalid Password', 'Password minimal  8 karakter');
-        return;
-      }
-
-      const result = await postLogin({email, password, navigation});
+      const result = await postLogin({email, password}); // Memanggil fungsi postLogin
       console.log('result...', result);
+
+      setLoading(false);
 
       if (result && result.token) {
         await AsyncStorage.setItem('token', result.token);
+        await AsyncStorage.setItem('Username', result.fullname);
         console.log('Token saved successfully');
-        navigation.replace('MainNavigator');
-        ToastAndroid.show('Selamat Datang', ToastAndroid.SHORT);
+
+        navigation.replace('MainNavigator'); // Mengganti route ke MainNavigator setelah login sukses
+        ToastAndroid.show('Selamat Datang', ToastAndroid.SHORT); // Menampilkan pesan selamat datang
       } else if (
         result &&
         result.message === 'Email or password is incorrect.'
@@ -78,132 +72,108 @@ const Login = ({navigation}) => {
         Alert.alert(
           'Login Failed',
           'Email or password is incorrect. Check kembali email dan password anda.',
-        );
+        ); // Menampilkan pesan kesalahan jika login gagal
       } else {
         console.log('Login failed or no token received.');
       }
     } catch (error) {
-      console.log('Error during login:', error);
+      console.log('Error during login:', error); // Menampilkan pesan kesalahan jika terjadi masalah saat login
     }
   };
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
-
-  const nothingPassword = () => {
-    Alert.alert('Perhatian !', ' Apakah anda lupa password ', [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'Ok',
-        onPress: () => navigation.navigate('ForgotPassword'),
-      },
-    ]);
+  const handleError = (error, input) => {
+    setErrors(prevState => ({...prevState, [input]: error}));
   };
 
-  // ! SecureTextEntry
-  const togglesecureTextEntry = () => {
-    setSecureTextEntry(praveState => !praveState);
+  const isValidEmail = email => {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
   };
 
-  // ! Image eye
-  const eyeIcon = secureTextEntry ? icons.show : icons.eye;
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
-
-      {/* NAVBAR iMAGES */}
-      <View style={styles.ViewContainer}>
-        <Image source={images.BgLogo} style={styles.Masjid} />
-        {/* <View style={styles.bodyText}>
-          <Text style={styles.textMasjid}>Muslim </Text>
-          <Text style={styles.textIndo}>Indonesia</Text>
-        </View> */}
-      </View>
-      <View style={styles.navbarLogin}>
-        <Text style={styles.login1}>Welcome </Text>
-        <Text style={styles.login2}>To login! </Text>
-      </View>
-      <View style={styles.bodyFumi}>
-        {/* TEXTINPUT */}
-        <Fumi
-          label={'Email'}
-          iconClass={Icon}
-          iconName={'account-box-multiple-outline'}
-          iconColor={'#54B435'}
-          iconSize={25}
-          iconWidth={40}
-          inputPadding={16}
-          style={styles.fumiEmail}
-          color={colors.black}
-          onChangeText={val => setEmail(val)}
-        />
-        <Fumi
-          label={'Password'}
-          iconClass={Icon}
-          iconName={'lock-outline'}
-          iconColor={'#54B435'}
-          iconSize={25}
-          iconWidth={40}
-          inputPadding={16}
-          secureTextEntry={secureTextEntry}
-          style={styles.fumiPassword}
-          color={colors.black}
-          onChangeText={val => setPassword(val)}
-        />
-        <View style={styles.bodyEye}>
-          <TouchableOpacity onPress={togglesecureTextEntry}>
-            <Image source={eyeIcon} style={styles.eye} />
-          </TouchableOpacity>
+      <Loader visible={loading} />
+      <View style={{paddingHorizontal: 20}}>
+        {/* NAVBAR iMAGES */}
+        <View style={styles.ViewContainer}>
+          <Image source={images.BgLogo} style={styles.Masjid} />
+          {/* <View style={styles.bodyText}>
+            <Text style={styles.textMasjid}>Muslim </Text>
+            <Text style={styles.textIndo}>Indonesia</Text>
+          </View> */}
         </View>
-      </View>
 
-      {/* FORGOT PASSWORD */}
-      <TouchableOpacity
-        style={styles.headerForgotPassword}
-        onPress={() => nothingPassword()}>
-        <Text style={styles.txtForgot}>Forgot </Text>
-        <Text style={styles.txtPassword}>Password?</Text>
-      </TouchableOpacity>
+        <View style={styles.navbarLogin}>
+          <Text style={styles.login1}>Welcome </Text>
+          <Text style={styles.login2}>To login! </Text>
+        </View>
 
-      {/* LOGIN */}
-      <TouchableOpacity
-        onPress={() => getData()}
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <LinearGradient colors={['#40EC15', '#688F16']} style={styles.login}>
-          <Text style={styles.txtLogin}>Let's Login</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+        {/* TEXTINPUT */}
+        <View>
+          <Input
+            onChangeText={val => setEmail(val)}
+            onFocus={() => handleError(null, 'email')}
+            iconName="email-outline"
+            label="Email"
+            placeholder="Enter your email address"
+            error={errors.email}
+            containerStyle={styles.inputContainer} // Added style here
+            inputStyle={styles.inputText} // Added style here
+            placeholderTextColor={colors.grey}
+          />
 
-      {/* CONNECTED TO GOOGLE */}
-      <View style={styles.bodyConnect}>
-        <Text style={styles.txtConnect}>Connect With</Text>
-        <TouchableOpacity>
-          <Image source={icons.GoggleIndo} style={styles.Goggle} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.createAccount}>
-        <Text style={styles.txtQuestions}>Don't have an account</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.txtCreateAccount}>Create account</Text>
-        </TouchableOpacity>
-      </View>
+          <Input
+            onChangeText={val => setPassword(val)}
+            onFocus={() => handleError(null, 'password')}
+            iconName="lock-outline"
+            label="Password"
+            placeholder="Enter your password"
+            error={errors.password}
+            password
+            containerStyle={styles.inputContainer} // Added style here
+            inputStyle={styles.inputText} // Added style here
+            placeholderTextColor={colors.grey}
+          />
 
-      {/* LINE */}
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <View style={styles.line} />
+          {/* LOGIN */}
+          <TouchableOpacity
+            onPress={() => handleLogin()}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginVertical: '10%',
+            }}>
+            <LinearGradient
+              colors={['#40EC15', '#688F16']}
+              style={styles.login}>
+              <Text style={styles.txtLogin}>Let's Login</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* CONNECTED TO GOOGLE */}
+          <View style={styles.bodyConnect}>
+            <Text style={styles.txtConnect}>Connect With</Text>
+            <TouchableOpacity>
+              <Image source={icons.GoggleIndo} style={styles.Goggle} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.createAccount}>
+            <Text style={styles.txtQuestions}>Don't have an account</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <Text style={styles.txtCreateAccount}>Create account</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* LINE */}
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <View style={styles.line} />
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
 };
-
-export default Login;
 
 const styles = StyleSheet.create({
   container: {
@@ -213,12 +183,10 @@ const styles = StyleSheet.create({
   ViewContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    // marginTop: '5%',
   },
   Masjid: {
     height: hp('27%'),
     width: wp('100%'),
-    // borderRadius: 10,
   },
   bodyText: {
     flexDirection: 'row',
@@ -237,8 +205,7 @@ const styles = StyleSheet.create({
   navbarLogin: {
     marginHorizontal: 20,
     flexDirection: 'row',
-    marginTop: '10%',
-    top: '3.5%',
+    // marginVertical: 10,
   },
   login1: {
     color: colors.white,
@@ -250,22 +217,26 @@ const styles = StyleSheet.create({
     fontFamily: fonts.PoppinsSemiBold,
     fontSize: dimens.xxl,
   },
-  bodyFumi: {
-    marginTop: '3%',
-  },
-  fumiEmail: {
-    marginHorizontal: 20,
+  inputContainer: {
+    backgroundColor: colors.white, // Light semi-transparent white
     borderRadius: 10,
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
-  fumiPassword: {
-    marginHorizontal: 20,
-    borderRadius: 10,
-    marginTop: '2%',
+  inputText: {
+    color: colors.black,
+    fontFamily: fonts.PoppinsRegular,
+    backgroundColor: colors.blue,
+  },
+  rowContainer: {
+    marginVertical: '37%',
+    right: 0,
+    position: 'absolute',
   },
   bodyEye: {
     marginBottom: 10,
     alignItems: 'flex-end',
-    right: '9%',
+    right: '25%',
   },
   eye: {
     bottom: 46,
@@ -275,7 +246,7 @@ const styles = StyleSheet.create({
   headerForgotPassword: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginRight: 22,
+    marginRight: 20,
     bottom: 40,
   },
   txtForgot: {
@@ -293,7 +264,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 100,
     height: height / 11,
-    width: width / 2,
+    width: '80%',
   },
   txtLogin: {
     fontFamily: fonts.PoppinsBold,
@@ -303,7 +274,6 @@ const styles = StyleSheet.create({
   bodyConnect: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '5%',
   },
   txtConnect: {
     fontSize: dimens.m,
@@ -311,14 +281,16 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   Goggle: {
-    width: wp('10%'),
+    width: wp('11%'),
     height: hp('5%'),
-    marginTop: '2%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 8,
   },
   createAccount: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '3%',
+    marginVertical: 20,
   },
   txtQuestions: {
     color: colors.black,
@@ -333,8 +305,10 @@ const styles = StyleSheet.create({
     width: width / 2,
     borderWidth: 1.8,
     color: colors.black,
-    bottom: 3,
-    marginTop: '16%',
+    marginVertical: '8%',
     borderRadius: 20,
+    marginLeft: 10,
   },
 });
+
+export default Login;

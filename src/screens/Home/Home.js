@@ -25,8 +25,12 @@ import TopTab from './TopTab';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import DataCarousel from './DataCarousel';
 import {useRef} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Home = ({navigation, route, item, data}) => {
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
+const Home = ({}) => {
   const [notifikation, setNotifikation] = useState();
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
@@ -35,9 +39,10 @@ const Home = ({navigation, route, item, data}) => {
   const itemWidth = screenWidth * 0.8;
   const carouselPagination = useRef(null);
   const [index, setIndex] = useState(0);
+  const [username, setUsername] = useState('');
 
   // ? RENDER CAROUSEL
-  const renderItem = ({item, pagination}) => (
+  const renderItem = ({item}) => (
     <LinearGradient
       colors={['#40EC15', '#688F16']}
       style={styles.contentCarosel}>
@@ -69,15 +74,18 @@ const Home = ({navigation, route, item, data}) => {
     };
   }, [index]);
 
-  // // ? GET DATA API LOGIN
-  // const getData = async () => {
-  //   const result = await getMoviesFromApi();
-  //   console.log('result...', result);
-  // };
-
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  // ! Di simpan di LocalStorage
+  useEffect(() => {
+    const retrieveData = async () => {
+      try {
+        const getUsername = await AsyncStorage.getItem('Username');
+        setUsername(getUsername);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    retrieveData();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -98,7 +106,10 @@ const Home = ({navigation, route, item, data}) => {
             <Text
               style={[
                 styles.textWelcome,
-                {fontSize: dimens.l, color: dark ? colors.white : colors.black},
+                {
+                  fontSize: dimens.l,
+                  color: dark ? colors.black : colors.white,
+                },
               ]}>
               Assalamualaikum, Selamat
             </Text>
@@ -108,7 +119,7 @@ const Home = ({navigation, route, item, data}) => {
                   styles.textWelcome,
                   {
                     fontSize: dimens.l,
-                    color: dark ? colors.white : colors.black,
+                    color: dark ? colors.black : colors.white,
                   },
                 ]}>
                 Datang di
@@ -118,7 +129,7 @@ const Home = ({navigation, route, item, data}) => {
                   style={[
                     styles.textWelcomeMuslim,
                     {
-                      fontSize: dimens.l,
+                      fontSize: dimens.xl,
                       color: dark ? colors.white : colors.white,
                     },
                   ]}>
@@ -128,7 +139,7 @@ const Home = ({navigation, route, item, data}) => {
                   style={[
                     styles.textWelcomeMuslim,
                     {
-                      fontSize: dimens.l,
+                      fontSize: dimens.xl,
                       color: dark ? colors.yellow : colors.yellow,
                     },
                   ]}>
@@ -143,11 +154,11 @@ const Home = ({navigation, route, item, data}) => {
                 style={[
                   styles.text,
                   {
-                    fontSize: dimens.l,
-                    color: dark ? colors.white : colors.black,
+                    fontSize: dimens.xxl,
+                    color: dark ? colors.black : colors.white,
                   },
                 ]}>
-                {/* {username} */}
+                {username}
               </Text>
 
               {/* NOTIFICATION & IAMGE USER */}
@@ -237,17 +248,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   textWelcome: {
-    fontFamily: fonts.PoppinsSemiBold,
-    fontSize: dimens.xxl,
+    fontFamily: fonts.PoppinsRegular,
+    fontSize: dimens.l,
     color: colors.black,
     textAlign: 'left',
   },
   TxtMuslim: {
     flexDirection: 'row',
+    bottom: 4,
   },
   textWelcomeMuslim: {
-    fontFamily: fonts.PoppinsSemiBold,
-    fontSize: dimens.xxl,
+    fontFamily: fonts.PoppinsBold,
+    fontSize: dimens.l,
     color: colors.black,
     textAlign: 'left',
     paddingLeft: 5,
@@ -255,11 +267,15 @@ const styles = StyleSheet.create({
   bodyTxtUser: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    bottom: 10,
   },
   text: {
-    fontFamily: fonts.PoppinsSemiBold,
-    fontSize: dimens.xxl,
+    fontFamily: fonts.PoppinsBold,
+    fontSize: dimens.xxxl,
     color: colors.black,
+    textAlign: 'left',
+    height: '40%',
+    width: width / 2,
   },
   bodynotifAndUser: {
     justifyContent: 'flex-end',
@@ -276,7 +292,6 @@ const styles = StyleSheet.create({
     width: wp('15%'),
   },
   textInput: {
-    flexDirectiion: 'row',
     alignItems: 'center',
     bottom: 20,
   },
@@ -307,7 +322,6 @@ const styles = StyleSheet.create({
     width: wp('27%'),
   },
   contentCard: {
-    // backgroundColor: colors.blue,
     height: hp('10%'),
   },
   bodyTextTitle: {
@@ -355,15 +369,14 @@ const styles = StyleSheet.create({
   },
   bodyTopTab: {
     backgroundColor: colors.white,
-    height: hp('100%'),
-    marginTop: '3%',
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
+    paddingBottom: '100%',
+    // backgroundColor: colors.blue,
   },
   Line: {
     borderWidth: 1.8,
     borderRadius: 10,
-    color: colors.red,
     width: wp('15%'),
     marginTop: '12%',
     bottom: 40,

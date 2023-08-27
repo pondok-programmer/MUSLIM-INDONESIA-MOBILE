@@ -5,10 +5,6 @@ const AppConfig = {
   baseUrl: 'https://muslimindo.muhammadiyahexpo.com',
 };
 
-// const AppConfig = {
-//   baseUrl: 'https://reactnative.dev',
-// };
-
 const get = async (url = '', params = {}) => {
   let queryString = new URLSearchParams();
   for (let key in params) {
@@ -272,6 +268,51 @@ const postReg = async (url = '', params = {}) => {
   return result;
 };
 
+const postReadContentMasjid = async (url = '', params = {}) => {
+  let newUrl = `${AppConfig.baseUrl}${url} `;
+  console.log(params, 'ini params post Content Masjid');
+  console.log('ENDPOINT...', newUrl);
+
+  let token = await AsyncStorage.getItem('token');
+  console.log('token', token);
+  let result =
+    token != null
+      ? fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            console.log('ini error ada token', err);
+            return err;
+          })
+      : fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            console.log('ini error', err);
+            return err;
+          });
+  return result;
+};
+
 const postLogout = async (url = '', params = {}) => {
   let newUrl = `${AppConfig.baseUrl}${url} `;
   console.log(params, 'ini params postlogout');
@@ -314,5 +355,57 @@ const postLogout = async (url = '', params = {}) => {
           });
   return result;
 };
+const postEditProfile = async (url = '', params = {}) => {
+  let newUrl = `${AppConfig.baseUrl}${url} `;
+  console.log(params, 'ini params postlogout');
+  console.log('ENDPOINT...', newUrl);
 
-export {get, post, postFormData, put, putFormData, postReg, postLogout};
+  let token = await AsyncStorage.getItem('token');
+  console.log('token', token);
+  let result =
+    token != null
+      ? fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          })
+      : fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          });
+  return result;
+};
+
+export {
+  get,
+  post,
+  postFormData,
+  put,
+  putFormData,
+  postReg,
+  postLogout,
+  postReadContentMasjid,
+  postEditProfile,
+};

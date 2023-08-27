@@ -6,36 +6,183 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {fonts, icons, images} from '../../assets';
 import {colors, dimens} from '../../utils';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {MasjidPost} from '../../services/AuthMasjid';
 
 const Tpq = () => {
+  const [dataTpq, setDataTpq] = useState([]);
+
+  const getDataTpq = async () => {
+    try {
+      const {user} = await MasjidPost();
+      console.log('response...', user);
+      setDataTpq(user);
+    } catch (error) {
+      console.log('Error fecthing data', error);
+    }
+  };
+
+  useEffect(() => {
+    getDataTpq();
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       {/* CONTENT 1 */}
-      <View style={styles.contentAll}>
-        <View style={styles.bodyContent}>
-          <Image source={images.mapsMuslimIndonesia} style={styles.imgMaps} />
-          <Image source={icons.location} style={styles.location} />
-        </View>
-        <View style={styles.bodyTitleTpq}>
-          <View style={styles.bodyTpq}>
-            <Text style={styles.textTitle}>Masjid AL-Husna</Text>
-            <TouchableOpacity>
-              <Image source={icons.vectorSave} style={styles.iconSave} />
-            </TouchableOpacity>
+
+      <View style={styles.contentAll2}>
+        {dataTpq.map((user, index) => (
+          <View key={index} style={styles.contentAll}>
+            <View style={{flexDirection: 'row', marginLeft: 10}}>
+              <Text style={styles.textCompliteAddres}>{user.district}</Text>
+              <Text style={styles.textCompliteAddres}> {user.regency}</Text>
+              <Text style={styles.textCompliteAddres}> {user.province}</Text>
+            </View>
+            <View style={styles.bodyContent}>
+              <Image source={{uri: user.photo}} style={styles.imgMaps} />
+            </View>
+            <View style={styles.bodyTitleMasjid}>
+              <Text style={styles.textTitle}>{user.place_name}</Text>
+              <TouchableOpacity>
+                <Image
+                  source={icons.vectorSave}
+                  style={{
+                    height: 20,
+                    width: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 8}}>
+              <Text style={styles.textAuthor}>{user.username}</Text>
+            </View>
           </View>
-          <Text style={styles.textAuthor}>Tempat Kanak-kanak</Text>
-        </View>
+        ))}
+      </View>
+      <View style={styles.contentAll2}>
+        {dataTpq.map((user, index) => (
+          <View key={index} style={styles.contentAll}>
+            <View style={{flexDirection: 'row', marginLeft: 10}}>
+              <Text style={styles.textCompliteAddres}>{user.district}</Text>
+              <Text style={styles.textCompliteAddres}> {user.regency}</Text>
+              <Text style={styles.textCompliteAddres}> {user.province}</Text>
+            </View>
+            <View style={styles.bodyContent}>
+              <Image source={{uri: user.photo}} style={styles.imgMaps} />
+            </View>
+            <View style={styles.bodyTitleMasjid}>
+              <Text style={styles.textTitle}>{user.place_name}</Text>
+              <TouchableOpacity>
+                <Image
+                  source={icons.vectorSave}
+                  style={{
+                    height: 20,
+                    width: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 8}}>
+              <Text style={styles.textAuthor}>{user.username}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+      <View style={styles.contentAll2}>
+        {dataTpq.map((user, index) => (
+          <View key={index} style={styles.contentAll}>
+            <View style={{flexDirection: 'row', marginLeft: 10}}>
+              <Text style={styles.textCompliteAddres}>{user.district}</Text>
+              <Text style={styles.textCompliteAddres}> {user.regency}</Text>
+              <Text style={styles.textCompliteAddres}> {user.province}</Text>
+            </View>
+            <View style={styles.bodyContent}>
+              <Image source={{uri: user.photo}} style={styles.imgMaps} />
+            </View>
+            <View style={styles.bodyTitleMasjid}>
+              <Text style={styles.textTitle}>{user.place_name}</Text>
+              <TouchableOpacity>
+                <Image
+                  source={icons.vectorSave}
+                  style={{
+                    height: 20,
+                    width: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 8}}>
+              <Text style={styles.textAuthor}>{user.username}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+      <View style={styles.contentAll2}>
+        {dataTpq.map((user, index) => (
+          <View key={index} style={styles.contentAll}>
+            <View style={{flexDirection: 'row', marginLeft: 10}}>
+              <Text style={styles.textCompliteAddres}>{user.district}</Text>
+              <Text style={styles.textCompliteAddres}> {user.regency}</Text>
+              <Text style={styles.textCompliteAddres}> {user.province}</Text>
+            </View>
+            <View style={styles.bodyContent}>
+              <Image source={{uri: user.photo}} style={styles.imgMaps} />
+            </View>
+            <View style={styles.bodyTitleMasjid}>
+              <Text style={styles.textTitle}>{user.place_name}</Text>
+              <TouchableOpacity>
+                <Image
+                  source={icons.vectorSave}
+                  style={{
+                    height: 20,
+                    width: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 8}}>
+              <Text style={styles.textAuthor}>{user.username}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+      <View style={styles.contentAll2}>
+        {dataTpq.map((user, index) => (
+          <View key={index} style={styles.contentAll}>
+            <View style={{flexDirection: 'row', marginLeft: 10}}>
+              <Text style={styles.textCompliteAddres}>{user.district}</Text>
+              <Text style={styles.textCompliteAddres}> {user.regency}</Text>
+              <Text style={styles.textCompliteAddres}> {user.province}</Text>
+            </View>
+            <View style={styles.bodyContent}>
+              <Image source={{uri: user.photo}} style={styles.imgMaps} />
+            </View>
+            <View style={styles.bodyTitleMasjid}>
+              <Text style={styles.textTitle}>{user.place_name}</Text>
+              <TouchableOpacity>
+                <Image
+                  source={icons.vectorSave}
+                  style={{
+                    height: 20,
+                    width: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 8}}>
+              <Text style={styles.textAuthor}>{user.username}</Text>
+            </View>
+          </View>
+        ))}
       </View>
 
-      {/* CONTENT 2 */}
-      <View style={styles.contentAll2}>
+      {/* <View style={styles.contentAll2}>
         <View style={styles.bodyContent}>
           <Image source={images.mapsMuslimIndonesia} style={styles.imgMaps} />
           <Image source={icons.location} style={styles.location} />
@@ -49,7 +196,7 @@ const Tpq = () => {
           </View>
           <Text style={styles.textAuthor}>Tempat Kanak-kanak</Text>
         </View>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 };
@@ -57,12 +204,13 @@ const Tpq = () => {
 export default Tpq;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#AEAEAE',
-    marginHorizontal: 20,
-    marginTop: 20,
-    height: hp('25%'),
-    borderRadius: 10,
+  contentAll2: {
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    marginHorizontal: 10,
+    marginTop: 10,
   },
   contentAll: {
     backgroundColor: '#AEAEAE',
@@ -70,53 +218,39 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
+    marginVertical: 10,
   },
-  contentAll2: {
-    backgroundColor: '#AEAEAE',
-    marginTop: 50,
-    height: hp('31%'),
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+  textCompliteAddres: {
+    fontFamily: fonts.PoppinsMedium,
+    fontSize: dimens.l,
+    color: colors.lightBlack,
   },
   bodyContent: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 2,
   },
   imgMaps: {
-    marginTop: 5,
     borderRadius: 10,
-    width: wp('87%'),
+    width: wp('91%'),
     height: hp('21%'),
   },
-  bodyTitleTpq: {
-    alignItems: 'flex-start',
-    marginLeft: 22,
-    bottom: 25,
-  },
-  bodyTpq: {
+  bodyTitleMasjid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: wp('78%'),
+    marginHorizontal: 5,
+    marginVertical: 5,
+    alignItems: 'center',
   },
   textTitle: {
     fontFamily: fonts.PoppinsMedium,
     color: colors.black,
-    fontSize: dimens.l,
-  },
-  iconSave: {
-    height: hp('2%'),
-    width: wp('3'),
-  },
-  location: {
-    height: hp('5%'),
-    width: wp('7%'),
-    bottom: 100,
+    fontSize: dimens.xl,
   },
   textAuthor: {
     fontFamily: fonts.PoppinsRegular,
     color: colors.black,
-    fontSize: dimens.xs,
+    fontSize: dimens.l,
+    bottom: 10,
   },
 });

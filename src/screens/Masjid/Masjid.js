@@ -1,7 +1,9 @@
 import React from 'react';
 import {
+  Dimensions,
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,87 +15,179 @@ import {
 } from 'react-native-responsive-screen';
 import {fonts, icons, images} from '../../assets';
 import {colors, dimens} from '../../utils';
+import {postReadContentMasjid} from '../../services';
+import {useEffect} from 'react';
+import {useState} from 'react';
+import {MasjidPost} from '../../services/AuthMasjid';
+
+const height = Dimensions.get('screen').height;
 
 const Masjid = () => {
+  const [userData, setUserData] = useState([]);
+
+  // ! CONTOH
+  // const getData = async () => {
+  //   const result = await getMoviesFromApi();
+  //   console.log('result...', result);
+  // };
+
+  // useEffect(() => {
+  //   getData();
+  // }, []);
+
+  // ! READ API
+  const getDataMasjid = async () => {
+    try {
+      const {user} = await MasjidPost();
+      console.log('response...', user);
+      setUserData(user);
+    } catch (error) {
+      console.log('Error fetching data', error);
+    }
+  };
+
+  useEffect(() => {
+    getDataMasjid();
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      {/* CONTENT 1 */}
-      <View style={styles.contentAll}>
-        <View style={styles.bodyContent}>
-          <Image source={images.mapsMuslimIndonesia} style={styles.imgMaps} />
-          <Image source={icons.location} style={styles.location} />
-        </View>
-        <View style={styles.bodyTitleMasjid}>
-          <View style={styles.bodyMasjid}>
-            <Text style={styles.textTitle}>Masjid AL-Husna</Text>
-            <TouchableOpacity>
-              <Image source={icons.vectorSave} style={styles.iconSave} />
-            </TouchableOpacity>
+    // <ScrollView>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.blue}}>
+      {/* ! CONTENT 1 */}
+      <View style={styles.contentAll2}>
+        {userData.map((user, index) => (
+          <View key={index} style={styles.contentAll}>
+            <View style={{flexDirection: 'row', marginLeft: 10}}>
+              <Text style={styles.textCompliteAddres}>{user.district}</Text>
+              <Text style={styles.textCompliteAddres}> {user.regency}</Text>
+              <Text style={styles.textCompliteAddres}> {user.province}</Text>
+            </View>
+            <View style={styles.bodyContent}>
+              <Image source={{uri: user.photo}} style={styles.imgMaps} />
+            </View>
+            <View style={styles.bodyTitleMasjid}>
+              <Text style={styles.textTitle}>{user.place_name}</Text>
+              <TouchableOpacity>
+                <Image
+                  source={icons.vectorSave}
+                  style={{
+                    height: 20,
+                    width: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 8}}>
+              <Text style={styles.textAuthor}>{user.username}</Text>
+            </View>
           </View>
-          <Text style={styles.textAuthor}>Oleh Rafi Zimraan</Text>
-        </View>
+        ))}
       </View>
 
       {/* CONTENT 2 */}
       <View style={styles.contentAll2}>
-        <View style={styles.bodyContent}>
-          <Image source={images.mapsMuslimIndonesia} style={styles.imgMaps} />
-          <Image source={icons.location} style={styles.location} />
-        </View>
-        <View style={styles.bodyTitleMasjid}>
-          <View style={styles.bodyMasjid}>
-            <Text style={styles.textTitle}>Masjid AL-Husna</Text>
-            <TouchableOpacity>
-              <Image source={icons.vectorSave} style={styles.iconSave} />
-            </TouchableOpacity>
+        {userData.map((user, index) => (
+          <View key={index} style={styles.contentAll}>
+            <View style={{flexDirection: 'row', marginLeft: 10}}>
+              <Text style={styles.textCompliteAddres}>{user.district}</Text>
+              <Text style={styles.textCompliteAddres}> {user.regency}</Text>
+              <Text style={styles.textCompliteAddres}> {user.province}</Text>
+            </View>
+            <View style={styles.bodyContent}>
+              <Image source={{uri: user.photo}} style={styles.imgMaps} />
+            </View>
+            <View style={styles.bodyTitleMasjid}>
+              <Text style={styles.textTitle}>{user.place_name}</Text>
+              <TouchableOpacity>
+                <Image
+                  source={icons.vectorSave}
+                  style={{
+                    height: 20,
+                    width: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 8}}>
+              <Text style={styles.textAuthor}>{user.username}</Text>
+            </View>
           </View>
-          <Text style={styles.textAuthor}>Oleh Rafi Zimraan</Text>
-        </View>
+        ))}
       </View>
+      {/* <View style={styles.contentAll2}>
+        {userData.map((user, index) => (
+          <View key={index} style={styles.contentAll}>
+            <View style={{flexDirection: 'row', marginLeft: 10}}>
+              <Text style={styles.textCompliteAddres}>{user.district}</Text>
+              <Text style={styles.textCompliteAddres}> {user.regency}</Text>
+              <Text style={styles.textCompliteAddres}> {user.province}</Text>
+            </View>
+            <View style={styles.bodyContent}>
+              <Image source={{uri: user.photo}} style={styles.imgMaps} />
+            </View>
+            <View style={styles.bodyTitleMasjid}>
+              <Text style={styles.textTitle}>{user.place_name}</Text>
+              <TouchableOpacity>
+                <Image
+                  source={icons.vectorSave}
+                  style={{
+                    height: 20,
+                    width: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 8}}>
+              <Text style={styles.textAuthor}>{user.username}</Text>
+            </View>
+          </View>
+        ))}
+      </View> */}
     </SafeAreaView>
+    // </ScrollView>
   );
 };
 
 export default Masjid;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#AEAEAE',
-    marginHorizontal: 20,
-    marginTop: 20,
-    height: hp('25%'),
-    borderRadius: 10,
-  },
   contentAll: {
     backgroundColor: '#AEAEAE',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
+    marginVertical: 10,
+  },
+  textCompliteAddres: {
+    fontFamily: fonts.PoppinsMedium,
+    fontSize: dimens.l,
+    color: colors.lightBlack,
   },
   contentAll2: {
-    backgroundColor: '#AEAEAE',
-    marginTop: 50,
-    height: hp('31%'),
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
+    marginHorizontal: 10,
+    marginTop: 10,
   },
   bodyContent: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 2,
   },
   imgMaps: {
-    marginTop: 5,
     borderRadius: 10,
-    width: wp('87%'),
+    width: wp('91%'),
     height: hp('21%'),
   },
   bodyTitleMasjid: {
-    alignItems: 'flex-start',
-    marginLeft: 22,
-    bottom: 25,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 5,
+    marginVertical: 5,
+    alignItems: 'center',
   },
   bodyMasjid: {
     flexDirection: 'row',
@@ -103,7 +197,7 @@ const styles = StyleSheet.create({
   textTitle: {
     fontFamily: fonts.PoppinsMedium,
     color: colors.black,
-    fontSize: dimens.l,
+    fontSize: dimens.xl,
   },
   iconSave: {
     height: hp('2%'),
@@ -117,6 +211,7 @@ const styles = StyleSheet.create({
   textAuthor: {
     fontFamily: fonts.PoppinsRegular,
     color: colors.black,
-    fontSize: dimens.xs,
+    fontSize: dimens.l,
+    bottom: 10,
   },
 });
