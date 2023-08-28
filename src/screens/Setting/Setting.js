@@ -239,17 +239,15 @@ const Setting = ({navigation, route}) => {
               </View>
             </View>
 
-            {/* CARD LOCATION */}
+            {/* CARD TELEPHONE */}
             <View style={styles.Cardlocation}>
               <TouchableOpacity style={styles.viewBodyCardEmail}>
                 <View style={styles.bodyIconEmail} />
-                <Image source={icons.goggleMap} style={styles.userLocation} />
+                <Image source={icons.telephone} style={styles.userLocation} />
               </TouchableOpacity>
               <View style={styles.titleTextProfile}>
-                <Text style={styles.cardTxtTitleProfile}>LOCATION</Text>
-                <Text style={styles.cardTxtTitleProfileDes}>
-                  Special Regency of Yogyakarta
-                </Text>
+                <Text style={styles.cardTxtTitleProfile}>Telephone</Text>
+                <Text style={styles.cardTxtTitleProfileDes}>6297978697</Text>
               </View>
             </View>
 
@@ -462,9 +460,9 @@ const styles = StyleSheet.create({
   },
   userLocation: {
     height: hp('4%'),
-    width: wp('6%'),
+    width: wp('9%'),
     bottom: '59%',
-    marginLeft: '24%',
+    marginLeft: '20%',
   },
   titleTextProfile: {
     justifyContent: 'center',

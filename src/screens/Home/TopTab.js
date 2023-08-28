@@ -1,4 +1,10 @@
-import {StyleSheet, View, TouchableOpacity, Animated} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Animated,
+  ScrollView,
+} from 'react-native';
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Masjid} from '../Masjid';
@@ -53,6 +59,8 @@ function MyTabBar({state, descriptors, navigation, position}) {
           outputRange: inputRange.map(i => (i === index ? 1 : 0)),
         });
 
+        const tabBackgroundColor = isFocused ? 'green' : 'grey';
+
         return (
           <TouchableOpacity
             key={route.key}
@@ -64,7 +72,7 @@ function MyTabBar({state, descriptors, navigation, position}) {
             onLongPress={onLongPress}
             style={{
               flex: 1,
-              backgroundColor: colors.green,
+              backgroundColor: tabBackgroundColor,
               marginHorizontal: 10,
               height: hp('4%'),
               width: wp('9%'),
@@ -97,7 +105,10 @@ const TopTab = () => {
       inactiveColor="#95a5a6"
       shifting={false}
       tabBar={props => <MyTabBar {...props} />}
-      style={{backgroundColor: dark ? colors.black : colors.white}}>
+      style={{
+        backgroundColor: dark ? colors.black : colors.white,
+        // height: '100%',
+      }}>
       <Tab.Screen name={'Masjid'} component={Masjid} />
       <Tab.Screen name={'Restoran'} component={Restoran} />
       <Tab.Screen name={'Tpq'} component={Tpq} />
@@ -106,18 +117,3 @@ const TopTab = () => {
 };
 
 export default TopTab;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  // barStyle: {
-  //   position: 'absolute',
-  //   bottom: 16,
-  //   right: 16,
-  //   left: 16,
-  //   borderRadius: 10,
-  //   borderTopRightRadius: 30,
-  //   borderTopLeftRadius: 30,
-  // },
-});

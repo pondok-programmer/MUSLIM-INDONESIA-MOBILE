@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -11,6 +11,10 @@ import {
   Alert,
   Button,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
 import {
@@ -22,6 +26,7 @@ import {GlobalContext} from '../../Store/globalContext';
 import {fonts, icons, images} from '../../assets';
 import LinearGradient from 'react-native-linear-gradient';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {getEditProfile} from '../../services/AuthEditProfile';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -29,138 +34,256 @@ const height = Dimensions.get('window').height;
 const EditProfile = ({navigation}) => {
   const globaleContext = useContext(GlobalContext);
   const dark = globaleContext.state.isDark;
-  const [imageCamera, setImageCamera] = React.useState(null);
-
-  const [gambar, setGambar] = useState({
-    uri: '',
-    name: null,
-    type: null,
-  });
+  const [selectedImageCamera, setSelectedImageCamera] = React.useState(null);
+  const [email, setEmail] = useState();
+  const [full_name, setFull_name] = useState();
+  const [username, setUsername] = useState();
+  const [phone_number, setPhone_number] = useState();
+  const [photo, setPhoto] = useState();
 
   // ! IMAGES PICKER
   // {' CAMERA'}
+  // const openCamera = () => {
+  //   launchImageLibrary(
+  //     {
+  //       mediaType: 'photo', // 'Images' should be changed to 'photo'
+  //       quality: 0.1,
+  //     },
+  //     result => {
+  //       setImageCamera(result.uri);
+  //       console.log(result.uri);
+  //     },
+  //   );
+  // };
+
+  // // {' GALERLY'}
+  // const openGallery = () => {
+  //   launchImageLibrary(
+  //     {
+  //       mediaType: 'photo',
+  //       quality: 0.1,
+  //     },
+  //     result => {
+  //       console.log(result);
+  //     },
+  //   );
+
+  // ! YANG TERBARU
   const openCamera = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo', // 'Images' should be changed to 'photo'
-        quality: 0.1,
-      },
-      result => {
-        setImageCamera(result.uri);
-        console.log(result.uri);
-      },
-    );
-  };
+    const options = {
+      mediaType: 'photo',
+      quality: 0.1,
+    };
 
-  // {' GALERLY'}
+    launchCamera(options, response => {
+      if (response.didCancel) {
+        console.log('Pemilihan gambar dibatalkan');
+      } else if (response.errorCode) {
+        console.log('ImagePicker error...', response.errorMessage);
+      } else {
+        const data = response.assets[0];
+        setSelectedImageCamera(data);
+        console.log(data);
+        console.log('gambar di terima');
+      }
+    });
+  };
   const openGallery = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        quality: 0.1,
-      },
-      result => {
-        console.log(result);
-      },
+    const options = {
+      mediaType: 'photo',
+      quality: 0.1,
+    };
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('Pemilihan gambar dibatalkan');
+      } else if (response.errorCode) {
+        console.log('ImagePicker error...', response.errorMessage);
+      } else {
+        const data = response.assets[0];
+        setSelectedImageCamera(data);
+        console.log(data);
+        console.log('gambar di terima');
+      }
+    });
+  };
+
+  // Function to open the image picker options
+  const openImagePickerOptions = () => {
+    Alert.alert(
+      'Pilih sumber gambar',
+      'Pilih sumber gambar dari :',
+      [
+        {
+          text: 'Batal',
+          style: 'cancel',
+        },
+        {
+          text: 'Galery',
+          onPress: () => openGallery('gallery'),
+        },
+        {
+          text: 'Kamera',
+          onPress: () => openCamera('capture'),
+        },
+      ],
+      {cancelable: true},
     );
   };
+
+  // ! POST EDIT PROFILE
+  const editProfile = async () => {
+    try {
+      const result = await getEditProfile({
+        full_name,
+        username,
+        email,
+        phone_number,
+        phone,
+      });
+      console.log('result...', result);
+      if (result.success) {
+        ToastAndroid.show('Berhasil mengedit data profile', ToastAndroid.SHORT);
+        navigation.goBack();
+      } else {
+        console.log('Gagal mengidit data', result.message);
+      }
+    } catch (error) {
+      console.log('Error editing profile', error);
+    }
+  };
+
+  useEffect(() => {
+    editProfile();
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
-      <View style={styles.body}>
-        {/* ICONS LEFT AND TEXT EDIT PROFILE */}
-        <View style={styles.navbarEditProfile}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image source={icons.left} style={styles.imgNavbar} />
-          </TouchableOpacity>
-          <Text style={styles.txtNavbar}>Edit Profile</Text>
-        </View>
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
+        <View style={styles.body}>
+          {/* ICONS LEFT AND TEXT EDIT PROFILE */}
+          <View style={styles.navbarEditProfile}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image source={icons.left} style={styles.imgNavbar} />
+            </TouchableOpacity>
+            <Text style={styles.txtNavbar}>Edit Profile</Text>
+          </View>
 
-        <View style={styles.bodyTextDes}>
-          <Text style={styles.txtDes}>
-            Silahkan merubah data pribadi anda, pastikan data yang anda berikan
-            tervalidasi dengan baik
-          </Text>
-          <Text style={styles.star}>*</Text>
-        </View>
+          <View style={styles.bodyTextDes}>
+            <Text style={styles.txtDes}>
+              Silahkan merubah data pribadi anda, pastikan data yang anda
+              berikan tervalidasi dengan baik
+            </Text>
+            <Text style={styles.star}>*</Text>
+          </View>
 
-        {/* IMG USER */}
-        <View style={styles.bodyImageUser}>
+          {/* IMG USER */}
           <View style={styles.bodyImageUser}>
-            {gambar.uri ? (
-              <Image
-                source={{uri: gambar.uri}}
-                style={{
-                  width: wp('33%'),
-                  height: hp('15%'),
-                  borderRadius: 200,
-                }}
+            <View style={styles.bodyImageUser}>
+              {selectedImageCamera ? (
+                <Image
+                  source={{uri: selectedImageCamera.uri}}
+                  style={{
+                    width: wp('33%'),
+                    height: hp('15%'),
+                    borderRadius: 200,
+                  }}
+                />
+              ) : (
+                <Image source={images.user} style={styles.imgUser} />
+              )}
+            </View>
+          </View>
+
+          {/* VECTOR TAKE CAMERA & GALERLY  */}
+          <View style={styles.bodyInputImageGallery}>
+            <TouchableOpacity
+              style={styles.TochableVector}
+              onPress={() => openImagePickerOptions()}>
+              <Image source={icons.VectorTambah} style={styles.imgVector} />
+            </TouchableOpacity>
+          </View>
+
+          <View
+            style={[
+              styles.ContentProfile,
+              {
+                backgroundColor: dark ? colors.black : colors.white,
+                flex: 1,
+              },
+            ]}>
+            {/* FULL NAME */}
+            <View style={styles.bodyTextinput}>
+              <Text style={styles.txtTextInput}>Full name</Text>
+              <TextInput
+                placeholder="full name"
+                selectionColor={'#000000'}
+                style={styles.TextInput}
+                onChangeText={val => setFull_name(val)}
               />
-            ) : (
-              <Image source={images.user} style={styles.imgUser} />
-            )}
-          </View>
-        </View>
+              <View style={styles.line} />
+            </View>
 
-        {/* VECTOR TAKE CAMERA & GALERLY  */}
-        <View style={styles.bodyInputImageGallery}>
-          <TouchableOpacity
-            style={styles.TochableVector}
-            onPress={() => openCamera()}>
-            <Image source={icons.VectorTambah} style={styles.imgVector} />
-          </TouchableOpacity>
-        </View>
+            {/* USERNAME */}
+            <View style={styles.bodyTextinput}>
+              <Text style={styles.txtTextInput}>Nama</Text>
+              <TextInput
+                placeholder="Username"
+                selectionColor={'#000000'}
+                style={styles.TextInput}
+                onChangeText={val => setUsername(val)}
+              />
+              <View style={styles.line} />
+            </View>
 
-        {/* CONTENT PROFILE */}
-        <View
-          style={[
-            styles.ContentProfile,
-            {
-              backgroundColor: dark ? colors.black : colors.white,
-            },
-          ]}>
-          {/* TEXTINPUT USERNAME */}
-          <View style={styles.bodyTextinput}>
-            <Text style={styles.txtTextInput}>Nama</Text>
-            <TextInput
-              placeholder="Username"
-              selectionColor={'#121212'}
-              style={styles.TextInput}
-            />
-            <View style={styles.line} />
-          </View>
-          {/* TEXTINPUT LOCATION */}
-          <View style={styles.bodyTextinput}>
+            {/* TEXTINPUT LOCATION */}
+            {/* <View style={styles.bodyTextinput}>
             <Text style={styles.txtTextInput}>Location</Text>
             <TextInput
               placeholder="Location"
-              selectionColor={'#121212'}
+              selectionColor={'#000000'}
               style={styles.TextInput}
             />
             <View style={styles.line} />
-          </View>
-          {/* TEXTINPUT EMAIL */}
-          <View style={styles.bodyTextinput}>
-            <Text style={styles.txtTextInput}>Email</Text>
-            <TextInput
-              placeholder="Email"
-              selectionColor={'#121212'}
-              style={styles.TextInput}
-            />
-            <View style={styles.line} />
-          </View>
+          </View> */}
 
-          {/* LOGIN */}
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <LinearGradient
-              colors={['#40EC15', '#688F16']}
-              style={styles.sumbit}>
-              <Text style={styles.txtChangeProfile}>Change</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+            {/* TEXTINPUT EMAIL */}
+            <View style={styles.bodyTextinput}>
+              <Text style={styles.txtTextInput}>Email</Text>
+              <TextInput
+                placeholder="Email"
+                selectionColor={'#000000'}
+                style={styles.TextInput}
+                onChangeText={val => setEmail(val)}
+              />
+              <View style={styles.line} />
+            </View>
+
+            {/* TEXTINPUT NUMBER */}
+            <View style={styles.bodyTextinput}>
+              <Text style={styles.txtTextInput}>Nomor Telefon</Text>
+              <TextInput
+                placeholder="+62"
+                selectionColor={'#000000'}
+                style={styles.TextInput}
+                onChangeText={val => setPhone_number(val)}
+              />
+              <View style={styles.line} />
+            </View>
+
+            {/* CHNAGE PROFILE */}
+            <TouchableOpacity onPress={() => getEditProfile()}>
+              <LinearGradient
+                colors={['#40EC15', '#688F16']}
+                style={styles.sumbit}>
+                <Text style={styles.txtChangeProfile}>Change</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -216,7 +339,6 @@ const styles = StyleSheet.create({
     height: height / 6,
     width: width / 2,
     marginHorizontal: 100,
-    // backgroundColor: colors.blue,
   },
   imgUser: {
     height: hp('17%'),
@@ -276,6 +398,5 @@ const styles = StyleSheet.create({
     height: hp('100%'),
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    bottom: '2%',
   },
 });
