@@ -1,8 +1,17 @@
-import {postEditProfile} from '..';
+import {postFormData} from '..';
 
-const getEditProfile = params => {
-  console.log(params, 'ini params edit profile');
-  return postEditProfile(`api/edit-profile/${username}`, params);
+const editProfile = async (formData, username) => {
+  console.log('tes username', username);
+  try {
+    const response = await postFormData(
+      `/api/edit-profile/${username}`,
+      formData,
+    );
+    return response; // You might want to return the response data or handle it as needed
+  } catch (error) {
+    console.error('Error editing profile:', error);
+    throw error; // Handle the error appropriately
+  }
 };
 
-export {getEditProfile};
+export {editProfile};

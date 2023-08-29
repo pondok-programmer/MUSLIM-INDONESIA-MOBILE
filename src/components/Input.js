@@ -22,8 +22,8 @@ const Input = ({
             borderColor: error
               ? colors.red
               : isFocused
-              ? colors.secondary
-              : colors.black,
+              ? colors.blue
+              : colors.secondary,
             alignItems: 'center',
             backgroundColor: '#fff', // Updated background color
           },

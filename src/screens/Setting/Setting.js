@@ -243,7 +243,7 @@ const Setting = ({navigation, route}) => {
             <View style={styles.Cardlocation}>
               <TouchableOpacity style={styles.viewBodyCardEmail}>
                 <View style={styles.bodyIconEmail} />
-                <Image source={icons.telephone} style={styles.userLocation} />
+                <Image source={icons.phoneCall} style={styles.userLocation} />
               </TouchableOpacity>
               <View style={styles.titleTextProfile}>
                 <Text style={styles.cardTxtTitleProfile}>Telephone</Text>
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
     marginLeft: '21%',
   },
   userLocation: {
-    height: hp('4%'),
+    height: hp('4.2%'),
     width: wp('9%'),
     bottom: '59%',
     marginLeft: '20%',

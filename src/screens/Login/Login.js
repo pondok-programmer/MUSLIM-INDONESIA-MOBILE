@@ -58,13 +58,22 @@ const Login = ({navigation}) => {
 
       setLoading(false);
 
-      if (result && result.token) {
+      if (
+        result &&
+        result.token &&
+        result.UserData &&
+        result.UserData.full_name
+      ) {
         await AsyncStorage.setItem('token', result.token);
-        await AsyncStorage.setItem('Username', result.fullname);
-        console.log('Token saved successfully');
+        await AsyncStorage.setItem('full_name', result.UserData.full_name);
+        await AsyncStorage.setItem('username', result.UserData.username);
 
+        console.log('Token saved successfully');
         navigation.replace('MainNavigator'); // Mengganti route ke MainNavigator setelah login sukses
-        ToastAndroid.show('Selamat Datang', ToastAndroid.SHORT); // Menampilkan pesan selamat datang
+        ToastAndroid.show(
+          `Selamat Datang ${result.UserData.full_name}`,
+          ToastAndroid.SHORT,
+        ); // Menampilkan pesan selamat datang
       } else if (
         result &&
         result.message === 'Email or password is incorrect.'
@@ -99,9 +108,9 @@ const Login = ({navigation}) => {
         <View style={styles.ViewContainer}>
           <Image source={images.BgLogo} style={styles.Masjid} />
           {/* <View style={styles.bodyText}>
-            <Text style={styles.textMasjid}>Muslim </Text>
-            <Text style={styles.textIndo}>Indonesia</Text>
-          </View> */}
+              <Text style={styles.textMasjid}>Muslim </Text>
+              <Text style={styles.textIndo}>Indonesia</Text>
+            </View> */}
         </View>
 
         <View style={styles.navbarLogin}>
@@ -203,9 +212,7 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   navbarLogin: {
-    marginHorizontal: 20,
     flexDirection: 'row',
-    // marginVertical: 10,
   },
   login1: {
     color: colors.white,

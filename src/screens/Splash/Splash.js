@@ -77,10 +77,10 @@ const Splash = ({navigation, route}) => {
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
       <View style={styles.body}>
         <Image source={images.logoMuslimIndo} style={styles.logo} />
-        <View style={styles.bodyTitle}>
+        {/* <View style={styles.bodyTitle}>
           <Text style={[styles.text, {marginTop: dimens.xxl}]}>Muslim</Text>
           <Text style={styles.textIndonesia}> Indonesia</Text>
-        </View>
+        </View> */}
       </View>
     </SafeAreaView>
   );

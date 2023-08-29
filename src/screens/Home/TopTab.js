@@ -107,7 +107,6 @@ const TopTab = () => {
       tabBar={props => <MyTabBar {...props} />}
       style={{
         backgroundColor: dark ? colors.black : colors.white,
-        // height: '100%',
       }}>
       <Tab.Screen name={'Masjid'} component={Masjid} />
       <Tab.Screen name={'Restoran'} component={Restoran} />

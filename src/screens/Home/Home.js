@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  FlatList,
   Dimensions,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
@@ -19,27 +18,25 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import TopTab from './TopTab';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import DataCarousel from './DataCarousel';
-import {useRef} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import Animated from 'react-native-reanimated';
 
 const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
 
 const Home = ({}) => {
-  const [notifikation, setNotifikation] = useState();
+  const [notifikation, setNotifikation] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [full_name, setFull_name] = useState();
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
   const {width: screenWidth} = Dimensions.get('window');
   const sliderWidth = screenWidth;
   const itemWidth = screenWidth * 0.8;
   const carouselPagination = useRef(null);
-  const [index, setIndex] = useState(0);
-  const [username, setUsername] = useState('');
 
   // ? RENDER CAROUSEL
   const renderItem = ({item}) => (
@@ -64,8 +61,13 @@ const Home = ({}) => {
     const timerCarousel = setInterval(() => {
       if (carouselPagination.current) {
         const nextIndex = (index + 1) % DataCarousel.length;
-        carouselPagination.current.snapToItem(nextIndex);
-        setIndex(nextIndex);
+        if (nextIndex === 0) {
+          carouselPagination.current.snapToItem(0);
+          setIndex(0);
+        } else {
+          carouselPagination.current.snapToItem(nextIndex);
+          setIndex(nextIndex);
+        }
       }
     }, 2000);
 
@@ -78,8 +80,8 @@ const Home = ({}) => {
   useEffect(() => {
     const retrieveData = async () => {
       try {
-        const getUsername = await AsyncStorage.getItem('Username');
-        setUsername(getUsername);
+        const getUserData = await AsyncStorage.getItem('full_name'); // Ganti 'username' menjadi 'userData'
+        setFull_name(getUserData);
       } catch (error) {
         console.log(error);
       }
@@ -101,7 +103,8 @@ const Home = ({}) => {
             backgroundColor: dark ? colors.black : colors.green,
           },
         ]}>
-        <ScrollView>
+        <ScrollView style={{flex: 1}}>
+          {/* <Animated style={styles.headerTxtWelcome}> */}
           <View style={styles.headerTxtWelcome}>
             <Text
               style={[
@@ -154,11 +157,11 @@ const Home = ({}) => {
                 style={[
                   styles.text,
                   {
-                    fontSize: dimens.xxl,
+                    fontSize: dimens.xl,
                     color: dark ? colors.black : colors.white,
                   },
                 ]}>
-                {username}
+                {full_name}
               </Text>
 
               {/* NOTIFICATION & IAMGE USER */}
@@ -199,6 +202,9 @@ const Home = ({}) => {
             renderItem={renderItem}
             sliderWidth={sliderWidth}
             itemWidth={itemWidth}
+            loop={true}
+            autoplay={true}
+            autoplayInterval={6000}
             onSnapToItem={index => setIndex(index)}
           />
           <Pagination
@@ -226,6 +232,7 @@ const Home = ({}) => {
               <TopTab />
             </View>
           </View>
+          {/* </Animated> */}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -239,6 +246,10 @@ const styles = StyleSheet.create({
   body: {
     height: hp('100%'),
     width: wp('100%'),
+  },
+  headerTxtWelcome: {
+    marginTop: '5%',
+    marginLeft: 10,
   },
   headerTxtWelcome: {
     marginTop: '5%',
@@ -293,7 +304,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     alignItems: 'center',
-    bottom: 20,
+    bottom: 30,
   },
   bodyTextInput: {
     flexDirection: 'row',
@@ -368,11 +379,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   bodyTopTab: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.blue,
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
     paddingBottom: '100%',
-    // backgroundColor: colors.blue,
   },
   Line: {
     borderWidth: 1.8,
