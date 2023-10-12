@@ -79,6 +79,7 @@ function MyTabBar({state, descriptors, navigation, position}) {
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: 10,
+              // backgroundColor: colors.white,
             }}>
             <Animated.Text
               style={{
@@ -95,7 +96,7 @@ function MyTabBar({state, descriptors, navigation, position}) {
   );
 }
 
-const TopTab = () => {
+const TopTab = ({dataMasjid}) => {
   const globalContext = React.useContext(GlobalContext);
   const dark = globalContext.state.isDark;
   return (
@@ -108,7 +109,11 @@ const TopTab = () => {
       style={{
         backgroundColor: dark ? colors.black : colors.white,
       }}>
-      <Tab.Screen name={'Masjid'} component={Masjid} />
+      <Tab.Screen
+        name={'Masjid'}
+        initialParams={dataMasjid}
+        component={Masjid}
+      />
       <Tab.Screen name={'Restoran'} component={Restoran} />
       <Tab.Screen name={'Tpq'} component={Tpq} />
     </Tab.Navigator>

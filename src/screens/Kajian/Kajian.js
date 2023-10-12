@@ -17,6 +17,7 @@ import {
 } from 'react-native-responsive-screen';
 import LinearGradient from 'react-native-linear-gradient';
 import {GlobalContext} from '../../Store/globalContext';
+import {CalendarSVG, ClockSVG, LocationSVG} from '../AssetsSVg';
 
 const Kajian = () => {
   const globalContext = useContext(GlobalContext);
@@ -43,11 +44,12 @@ const Kajian = () => {
             />
           </View>
         </View>
+
         {/* CONTENT KAJIAN */}
         <LinearGradient
           colors={['#ffffff', '#ffffff']}
           style={styles.contentKajian}>
-          <View style={styles.body}>
+          <View style={{flexDirection: 'row'}}>
             <TouchableOpacity>
               <Image source={images.posterkajian} style={styles.img} />
             </TouchableOpacity>
@@ -56,54 +58,22 @@ const Kajian = () => {
 
           {/* LOCATION */}
           <View style={styles.location}>
-            <TouchableOpacity>
-              <Image source={icons.location} style={styles.imgLocation} />
-            </TouchableOpacity>
+            <LocationSVG height={20} width={20} />
             <Text style={styles.textLocation}>Yogyakarta</Text>
-          </View>
-
-          {/* DATE */}
-          <View style={styles.locationCalender}>
-            <Image source={icons.calendar} style={styles.imgCalendar} />
-            <Text style={styles.textLocation}>Monday, 18-04-2023</Text>
           </View>
 
           {/* CLOCK */}
           <View style={styles.locationClock}>
-            <Image source={icons.clock} style={styles.imgClock} />
+            <ClockSVG height={20} width={30} />
             <Text style={styles.textClock}>24.00 pm</Text>
-          </View>
-        </LinearGradient>
-        {/* CONTENT KAJIAN 2 */}
-        {/* <LinearGradient
-          colors={['#ffffff', '#ffffff']}
-          style={styles.contentKajian}>
-          <View style={styles.body}>
-            <TouchableOpacity>
-              <Image source={images.posterkajian} style={styles.img} />
-            </TouchableOpacity>
-            <Text style={styles.txtTitle}>Mengkaji dengan metode syi'ah</Text>
-          </View> */}
-        {/* LOCATION */}
-        {/* <View style={styles.location}>
-            <TouchableOpacity>
-              <Image source={icons.location} style={styles.imgLocation} />
-            </TouchableOpacity>
-            <Text style={styles.textLocation}>Yogyakarta</Text>
           </View>
 
           {/* DATE */}
-        {/* <View style={styles.locationCalender}>
-            <Image source={icons.calendar} style={styles.imgCalendar} />
+          <View style={styles.locationCalender}>
+            <CalendarSVG width={22} height={30} />
             <Text style={styles.textLocation}>Monday, 18-04-2023</Text>
-          {/* </View> */}
-
-        {/* CLOCK */}
-        {/* <View style={styles.locationClock}>
-            <Image source={icons.clock} style={styles.imgClock} />
-            <Text style={styles.textClock}>17.OO PM</Text>
-          </View> */}
-        {/* </LinearGradient> */}
+          </View>
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -148,9 +118,6 @@ const styles = StyleSheet.create({
     marginTop: '6%',
     borderRadius: 10,
   },
-  body: {
-    flexDirection: 'row',
-  },
   img: {
     height: hp('17%'),
     width: wp('40%'),
@@ -161,55 +128,44 @@ const styles = StyleSheet.create({
   txtTitle: {
     fontSize: dimens.xl,
     color: colors.black,
-    fontFamily: fonts.PoppinsBold,
+    fontFamily: fonts.PoppinsSemiBold,
     textAlign: 'left',
-    width: wp('52%'),
+    width: wp('58%'),
+    height: hp('6%'),
     marginTop: '2%',
     marginHorizontal: 5,
   },
   location: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginLeft: '21%',
-    bottom: 95,
-    padding: 3,
-    // backgroundColor: colors.blue,
+    alignItems: 'center',
+    marginLeft: '45%',
+    bottom: 87,
+    width: 120,
   },
   locationClock: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginLeft: '17%',
-    bottom: 95,
+    alignItems: 'center',
+    marginLeft: '43%',
+    bottom: 87,
+    width: 120,
   },
   locationCalender: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginLeft: '39%',
-    bottom: 97,
-    padding: 3,
-    // backgroundColor: colors.blue,
-  },
-  imgLocation: {
-    height: hp('2%'),
-    width: wp('3%'),
-    marginRight: 8,
+    alignItems: 'center',
+    marginLeft: '40%',
+    bottom: 87,
   },
   textLocation: {
     fontFamily: fonts.PoppinsMedium,
     color: colors.black,
+    marginLeft: 6,
   },
   textClock: {
     fontFamily: fonts.PoppinsMedium,
     color: colors.black,
-  },
-  imgCalendar: {
-    height: hp('2%'),
-    width: wp('4%'),
-    marginRight: 8,
-  },
-  imgClock: {
-    height: hp('2%'),
-    width: wp('4%'),
-    marginRight: 8,
+    marginLeft: 6,
   },
 });

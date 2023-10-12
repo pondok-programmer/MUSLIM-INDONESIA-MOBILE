@@ -34,7 +34,7 @@ const style = StyleSheet.create({
   },
   container: {
     position: 'absolute',
-    zIndex: 10,
+    zIndex: 999,
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
   },

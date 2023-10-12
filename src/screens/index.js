@@ -10,6 +10,8 @@ import {Restoran} from './Restoran';
 import {Tpq} from './Tpq';
 import {EditProfile} from './EditProfile';
 import {Login} from './Login';
+import {Admin} from './Admin';
+import {DataAllSearch} from './DataAllSearch.js';
 
 export {
   Splash,
@@ -24,4 +26,6 @@ export {
   Restoran,
   Tpq,
   EditProfile,
+  Admin,
+  DataAllSearch,
 };

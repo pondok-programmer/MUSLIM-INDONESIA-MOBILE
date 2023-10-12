@@ -22,9 +22,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useRef} from 'react';
 import {postLogout} from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {UserUpdate} from '../EditProfile/UserUpdate';
+import {ProfileRead} from '../../services/AuthProfile';
 
 const Setting = ({navigation, route}) => {
-  const [loggedOut, setLoggedOut] = useState();
+  const {user} = UserUpdate();
   const drawerLeft = useRef(null);
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
@@ -73,6 +75,33 @@ const Setting = ({navigation, route}) => {
       },
     ]);
   };
+
+  // ! READ PROFILE
+  const [dataProfile, setDataProfile] = useState({});
+  useEffect(() => {
+    let isMounted = true;
+
+    async function fetchData() {
+      try {
+        const username = await AsyncStorage.getItem('username');
+        if (!username) {
+          console.log('Username tidak tersedia');
+          return;
+        }
+        const users = await ProfileRead(username);
+        setDataProfile(users?.users || dataProfile);
+      } catch (error) {
+        console.log('Error reading profile in setting:', error);
+      }
+    }
+    if (isMounted) {
+      fetchData();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // ! DRAWER LAYOUT ANDROID
   const drawerLayout = (
@@ -147,10 +176,7 @@ const Setting = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar
-        barStyle={'light-content'}
-        backgroundColor={dark ? colors.black : colors.green}
-      />
+      <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
       <DrawerLayoutAndroid
         ref={drawerLeft}
         drawerWidth={270}
@@ -166,19 +192,31 @@ const Setting = ({navigation, route}) => {
           </TouchableOpacity>
 
           {/* TOGGLE DARK */}
-          <ButtonCustom title="Dark" onPress={_setDarkTheme} />
+          <ButtonCustom
+            title="Dark"
+            onPress={_setDarkTheme}
+            color={dark ? colors.black : colors.green}
+            textStyle={{color: dark ? colors.white : colors.black}}
+          />
           <ButtonCustom
             title="Light"
-            color={colors.black}
-            style={{marginTop: dimens.m}}
+            color={dark ? colors.green : colors.black}
+            style={{marginTop: dimens.m, color: colors.black}}
             onPress={_setLightTheme}
-            buttonStyle={{marginTop: dimens.l, bottom: 7}}
+            buttonStyle={{marginTop: dimens.l, bottom: 7, color: colors.black}}
           />
 
           {/* IMAGE USER & NAME USER/ADMIN */}
           <View style={styles.ContentImageUser}>
             <TouchableOpacity style={styles.viewImageUser}>
-              <Image source={images.user} style={styles.user} />
+              <Image
+                source={
+                  dataProfile.photo && dataProfile.photo !== ''
+                    ? {uri: dataProfile.photo}
+                    : images.user
+                }
+                style={styles.user}
+              />
             </TouchableOpacity>
             <Text
               style={[
@@ -188,7 +226,7 @@ const Setting = ({navigation, route}) => {
                   color: dark ? colors.white : colors.black,
                 },
               ]}>
-              Rafi
+              {dataProfile.username ? dataProfile.username : 'User'}
             </Text>
 
             {/* TEXT EMAIL */}
@@ -201,7 +239,7 @@ const Setting = ({navigation, route}) => {
                     color: dark ? colors.white : colors.black,
                   },
                 ]}>
-                raffizimraan27@gmail.com
+                {dataProfile.email ? dataProfile.email : 'user@gmail.com'}
               </Text>
             </View>
 
@@ -209,7 +247,7 @@ const Setting = ({navigation, route}) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('EditProfile')}>
               <LinearGradient
-                colors={['#D9D9D9', '#D9D9D9']}
+                colors={['#EBEBEB', '#EBEBEB']}
                 style={styles.bodyEditProfile}>
                 <Text style={styles.txtEditProfile}>Edit Profile</Text>
               </LinearGradient>
@@ -229,25 +267,34 @@ const Setting = ({navigation, route}) => {
             <View style={styles.CardProfile}>
               <TouchableOpacity style={styles.viewBodyCardEmail}>
                 <View style={styles.bodyIconEmail} />
-                <Image source={images.user} style={styles.userIcon} />
+                <Image
+                  source={
+                    dataProfile.photo && dataProfile.photo !== ''
+                      ? {uri: dataProfile.photo}
+                      : images.user
+                  }
+                  style={styles.userIconImgUser}
+                />
               </TouchableOpacity>
               <View style={styles.titleTextProfile}>
                 <Text style={styles.cardTxtTitleProfile}>PROFILE</Text>
                 <Text style={styles.cardTxtTitleProfileDes}>
-                  Rafi zimraan arjuna wijaya
+                  {dataProfile.full_name ? dataProfile.full_name : 'user'}
                 </Text>
               </View>
             </View>
 
             {/* CARD TELEPHONE */}
             <View style={styles.Cardlocation}>
-              <TouchableOpacity style={styles.viewBodyCardEmail}>
+              <TouchableOpacity style={styles.viewBodyCardTelephone}>
                 <View style={styles.bodyIconEmail} />
-                <Image source={icons.phoneCall} style={styles.userLocation} />
+                <Image source={icons.phoneCall} style={styles.userTelephone} />
               </TouchableOpacity>
-              <View style={styles.titleTextProfile}>
+              <View style={styles.titleTextTelephone}>
                 <Text style={styles.cardTxtTitleProfile}>Telephone</Text>
-                <Text style={styles.cardTxtTitleProfileDes}>6297978697</Text>
+                <Text style={styles.cardTxtTitleProfileDes}>
+                  {dataProfile.phone_number ? dataProfile.phone_number : '00**'}
+                </Text>
               </View>
             </View>
 
@@ -260,7 +307,7 @@ const Setting = ({navigation, route}) => {
               <View style={styles.titleTextProfile}>
                 <Text style={styles.cardTxtTitleProfile}>EMAIL</Text>
                 <Text style={styles.cardTxtTitleProfileDes}>
-                  raffizimraan27@gmail.com
+                  {dataProfile.email ? dataProfile.email : 'user@gmail.com'}
                 </Text>
               </View>
             </View>
@@ -356,6 +403,7 @@ const styles = StyleSheet.create({
   user: {
     height: hp('11%'),
     width: wp('23%'),
+    borderRadius: 20,
   },
   textImageUser: {
     fontFamily: fonts.PoppinsSemiBold,
@@ -444,7 +492,11 @@ const styles = StyleSheet.create({
   },
   viewBodyCardEmail: {
     marginTop: '2%',
-    marginLeft: '2%',
+    alignItems: 'center',
+  },
+  viewBodyCardTelephone: {
+    marginTop: '2%',
+    alignItems: 'center',
   },
   bodyIconEmail: {
     backgroundColor: colors.white,
@@ -453,30 +505,52 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   userIcon: {
-    height: hp('4%'),
-    width: wp('8%'),
-    bottom: '59%',
-    marginLeft: '21%',
+    height: hp('6.2%'),
+    width: wp('13%'),
+    bottom: '80%',
+    marginTop: 10,
+    alignItems: 'center',
+    marginHorizontal: 20,
+    alignSelf: 'center',
   },
-  userLocation: {
-    height: hp('4.2%'),
-    width: wp('9%'),
-    bottom: '59%',
-    marginLeft: '20%',
+  userIconImgUser: {
+    height: hp('6.2%'),
+    width: wp('13%'),
+    bottom: '80%',
+    marginTop: 10,
+    alignItems: 'center',
+    marginHorizontal: 20,
+    alignSelf: 'center',
+  },
+  userTelephone: {
+    height: hp('6.2%'),
+    width: wp('13%'),
+    bottom: '80%',
+    marginTop: 10,
+    alignItems: 'center',
+    marginHorizontal: 20,
+    alignSelf: 'center',
   },
   titleTextProfile: {
     justifyContent: 'center',
     alignItems: 'flex-start',
+    alignSelf: 'center',
+  },
+  titleTextTelephone: {
+    alignItems: 'flex-start',
+    alignSelf: 'center',
   },
   cardTxtTitleProfile: {
     fontFamily: fonts.PoppinsSemiBold,
     color: colors.black,
     fontSize: dimens.xxl,
+    alignItems: 'flex-start',
   },
   cardTxtTitleProfileDes: {
     fontFamily: fonts.PoppinsMedium,
     color: colors.black,
     fontSize: dimens.m,
+    alignItems: 'center',
   },
 });
 

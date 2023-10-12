@@ -11,6 +11,8 @@ import {
   Image,
   TouchableOpacity,
   ToastAndroid,
+  Modal,
+  Button,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -19,9 +21,11 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Input, Loader} from '../../components';
 import {colors, dimens} from '../../utils';
-import {fonts, icons, images} from '../../assets';
+import {fonts, images} from '../../assets';
 import LinearGradient from 'react-native-linear-gradient';
 import {postLogin} from '../../services/Auth';
+import {IconGoogleSVG} from '../AssetsSVg';
+import {useRef} from 'react';
 
 const height = Dimensions.get('screen').height;
 const width = Dimensions.get('screen').width;
@@ -31,6 +35,9 @@ const Login = ({navigation}) => {
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const isMounted = useRef(true);
 
   const handleLogin = async () => {
     Keyboard.dismiss();
@@ -53,10 +60,8 @@ const Login = ({navigation}) => {
     try {
       setLoading(true);
 
-      const result = await postLogin({email, password}); // Memanggil fungsi postLogin
+      const result = await postLogin({email, password});
       console.log('result...', result);
-
-      setLoading(false);
 
       if (
         result &&
@@ -67,13 +72,18 @@ const Login = ({navigation}) => {
         await AsyncStorage.setItem('token', result.token);
         await AsyncStorage.setItem('full_name', result.UserData.full_name);
         await AsyncStorage.setItem('username', result.UserData.username);
+        await AsyncStorage.setItem('UserData', JSON.stringify(result.UserData));
+        await AsyncStorage.setItem(
+          'user_credential',
+          JSON.stringify({email, password}),
+        );
 
         console.log('Token saved successfully');
-        navigation.replace('MainNavigator'); // Mengganti route ke MainNavigator setelah login sukses
+        navigation.replace('MainNavigator');
         ToastAndroid.show(
           `Selamat Datang ${result.UserData.full_name}`,
           ToastAndroid.SHORT,
-        ); // Menampilkan pesan selamat datang
+        );
       } else if (
         result &&
         result.message === 'Email or password is incorrect.'
@@ -81,15 +91,33 @@ const Login = ({navigation}) => {
         Alert.alert(
           'Login Failed',
           'Email or password is incorrect. Check kembali email dan password anda.',
-        ); // Menampilkan pesan kesalahan jika login gagal
+        );
       } else {
         console.log('Login failed or no token received.');
+        showErrorModal('Maaf sedang tidak baik-baik saja.');
       }
     } catch (error) {
-      console.log('Error during login:', error); // Menampilkan pesan kesalahan jika terjadi masalah saat login
+      console.log('Error during login:', error);
+    } finally {
+      if (isMounted.current) {
+        setLoading(false);
+      }
     }
   };
 
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  // ! MODAL
+  const showErrorModal = message => {
+    setErrorMessage(message);
+    setErrorModalVisible(true);
+  };
+
+  // ! ERROR TEXTINPUT
   const handleError = (error, input) => {
     setErrors(prevState => ({...prevState, [input]: error}));
   };
@@ -101,16 +129,60 @@ const Login = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
       <Loader visible={loading} />
+      <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
+      {/* Modal Error */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={errorModalVisible}
+        onRequestClose={() => {
+          setErrorModalVisible(false);
+        }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              padding: 20,
+              borderRadius: 10,
+            }}>
+            <Text
+              style={{
+                fontFamily: fonts.PoppinsBold,
+                marginBottom: 10,
+                fontSize: dimens.xl,
+                color: colors.black,
+              }}>
+              Error
+            </Text>
+            <Text
+              style={{
+                color: colors.black,
+                fontSize: dimens.l,
+                fontFamily: fonts.PoppinsRegular,
+              }}>
+              {errorMessage}
+            </Text>
+            <Button
+              title="Tutup"
+              onPress={() => {
+                setErrorModalVisible(false);
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
+
       <View style={{paddingHorizontal: 20}}>
         {/* NAVBAR iMAGES */}
         <View style={styles.ViewContainer}>
-          <Image source={images.BgLogo} style={styles.Masjid} />
-          {/* <View style={styles.bodyText}>
-              <Text style={styles.textMasjid}>Muslim </Text>
-              <Text style={styles.textIndo}>Indonesia</Text>
-            </View> */}
+          <Image source={images.logoMuslimIndo} style={styles.Masjid} />
         </View>
 
         <View style={styles.navbarLogin}>
@@ -127,8 +199,6 @@ const Login = ({navigation}) => {
             label="Email"
             placeholder="Enter your email address"
             error={errors.email}
-            containerStyle={styles.inputContainer} // Added style here
-            inputStyle={styles.inputText} // Added style here
             placeholderTextColor={colors.grey}
           />
 
@@ -140,8 +210,6 @@ const Login = ({navigation}) => {
             placeholder="Enter your password"
             error={errors.password}
             password
-            containerStyle={styles.inputContainer} // Added style here
-            inputStyle={styles.inputText} // Added style here
             placeholderTextColor={colors.grey}
           />
 
@@ -150,8 +218,7 @@ const Login = ({navigation}) => {
             onPress={() => handleLogin()}
             style={{
               alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: '10%',
+              marginTop: 36,
             }}>
             <LinearGradient
               colors={['#40EC15', '#688F16']}
@@ -164,7 +231,7 @@ const Login = ({navigation}) => {
           <View style={styles.bodyConnect}>
             <Text style={styles.txtConnect}>Connect With</Text>
             <TouchableOpacity>
-              <Image source={icons.GoggleIndo} style={styles.Goggle} />
+              <IconGoogleSVG style={styles.Goggle} />
             </TouchableOpacity>
           </View>
           <View style={styles.createAccount}>
@@ -175,9 +242,6 @@ const Login = ({navigation}) => {
           </View>
 
           {/* LINE */}
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <View style={styles.line} />
-          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -223,17 +287,6 @@ const styles = StyleSheet.create({
     color: colors.yellow,
     fontFamily: fonts.PoppinsSemiBold,
     fontSize: dimens.xxl,
-  },
-  inputContainer: {
-    backgroundColor: colors.white, // Light semi-transparent white
-    borderRadius: 10,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  inputText: {
-    color: colors.black,
-    fontFamily: fonts.PoppinsRegular,
-    backgroundColor: colors.blue,
   },
   rowContainer: {
     marginVertical: '37%',
@@ -281,6 +334,7 @@ const styles = StyleSheet.create({
   bodyConnect: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 25,
   },
   txtConnect: {
     fontSize: dimens.m,
@@ -288,16 +342,15 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   Goggle: {
-    width: wp('11%'),
+    width: wp('9%'),
     height: hp('5%'),
     justifyContent: 'center',
     alignItems: 'center',
-    top: 8,
   },
   createAccount: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: 10,
   },
   txtQuestions: {
     color: colors.black,
@@ -307,14 +360,6 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: fonts.PoppinsBold,
     fontSize: dimens.m,
-  },
-  line: {
-    width: width / 2,
-    borderWidth: 1.8,
-    color: colors.black,
-    marginVertical: '8%',
-    borderRadius: 20,
-    marginLeft: 10,
   },
 });
 

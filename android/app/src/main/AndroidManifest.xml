@@ -2,12 +2,6 @@
   package="com.rnboilerplate">
 
     <uses-permission android:name="android.permission.INTERNET" />
-        <!-- <uses-permission android:name="android.permission.CAMERA" />
-        <uses-feature android:name="android.hardware.camera" />
-        <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
-
-    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
 
     <application
       android:name=".MainApplication"
@@ -16,6 +10,9 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+      <meta-data
+     android:name="com.google.android.geo.API_KEY"
+     android:value="AIzaSyCftnoPSFTjOHSy7oB_z9nXmwzPZ7YDieo"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

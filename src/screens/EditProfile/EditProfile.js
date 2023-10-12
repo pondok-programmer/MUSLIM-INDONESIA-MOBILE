@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -9,11 +9,7 @@ import {
   Image,
   TextInput,
   Alert,
-  Button,
   Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
   ToastAndroid,
 } from 'react-native';
 import {colors, dimens} from '../../utils';
@@ -27,16 +23,22 @@ import {fonts, icons, images} from '../../assets';
 import LinearGradient from 'react-native-linear-gradient';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {editProfile} from '../../services/AuthEditProfile';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {UserUpdate} from './UserUpdate';
+import {Loader} from '../../components';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 const EditProfile = ({navigation}) => {
+  const {user, updateUser} = UserUpdate(); // Gunakan useUser untuk mengakses data pengguna
   const globaleContext = useContext(GlobalContext);
   const dark = globaleContext.state.isDark;
   const [selectedImageCamera, setSelectedImageCamera] = React.useState(null);
-  const [full_name, setFull_name] = useState();
+  const [full_name, setFull_name] = useState(user?.full_name || '');
   const [photo, setPhoto] = useState();
+  const [loading, setLoading] = useState(false);
+  const isMounted = useRef(true);
 
   // ! IMAGES PICKER
   // {' CAMERA'}
@@ -132,47 +134,63 @@ const EditProfile = ({navigation}) => {
   };
 
   // ! POST EDIT PROFILE
-  const createFormData = () => {
-    const formData = new FormData();
-    if (selectedImageCamera) {
-      formData.append('photo', {
-        uri: selectedImageCamera.uri,
-        type: selectedImageCamera.type,
-        name: selectedImageCamera.fileName,
-      });
-    }
-    formData.append('full_name', full_name);
-
-    return formData;
-  };
-
   const editProfileUser = async () => {
     try {
-      const username = globaleContext.state.username; // Get the username from global context
-      console.log('username', globaleContext);
+      setLoading(true);
+      const username = await AsyncStorage.getItem('username');
+      console.log(username);
       if (!username) {
         console.log('Username tidak tersedia');
         return;
       }
 
-      const formData = createFormData();
-      const result = await editProfile(formData, username);
-      console.log('result...', result);
+      const formData = new FormData();
+      if (selectedImageCamera) {
+        formData.append('photo', {
+          uri: selectedImageCamera.uri,
+          type: selectedImageCamera.type,
+          name: selectedImageCamera.fileName,
+        });
+      }
+      formData.append('full_name', full_name);
 
-      if (result.success) {
-        ToastAndroid.show('Berhasil mengedit data profil', ToastAndroid.SHORT);
-        navigation.goBack();
-      } else {
-        console.log('Gagal mengedit data', result.message);
+      const result = await editProfile(formData, username);
+
+      if (isMounted.current) {
+        if (result.id) {
+          updateUser({
+            photo: selectedImageCamera?.uri || user?.photo,
+            full_name,
+          });
+
+          ToastAndroid.show(
+            'Berhasil mengedit data profil',
+            ToastAndroid.SHORT,
+          );
+          navigation.goBack();
+        } else {
+          console.log('Gagal mengedit data', result.message);
+        }
+        setLoading(false);
       }
     } catch (error) {
       console.log('Error editing profile', error);
+      if (isMounted.current) {
+        setLoading(false);
+      }
     }
   };
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
+      <Loader visible={loading} />
       <View style={styles.body}>
         {/* ICONS LEFT AND TEXT EDIT PROFILE */}
         <View style={styles.navbarEditProfile}>
@@ -250,8 +268,6 @@ const EditProfile = ({navigation}) => {
     </SafeAreaView>
   );
 };
-
-export default EditProfile;
 
 const styles = StyleSheet.create({
   container: {
@@ -364,3 +380,5 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
   },
 });
+
+export default EditProfile;

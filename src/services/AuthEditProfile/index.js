@@ -1,7 +1,6 @@
 import {postFormData} from '..';
 
 const editProfile = async (formData, username) => {
-  console.log('tes username', username);
   try {
     const response = await postFormData(
       `/api/edit-profile/${username}`,

@@ -10,8 +10,11 @@ import {
   Alert,
   ToastAndroid,
   Dimensions,
+  Modal,
+  TouchableHighlight,
+  Button,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {colors, dimens} from '../../utils';
 import {fonts, icons, images} from '../../assets';
 import {
@@ -22,6 +25,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Fumi} from 'react-native-textinput-effects';
 import LinearGradient from 'react-native-linear-gradient';
 import {postRegister} from '../../services/AuthRegister';
+import {IconGoogleSVG} from '../AssetsSVg';
+import {Loader} from '../../components';
+import PhoneInput from 'react-native-phone-number-input';
 
 const width = Dimensions.get('screen').width;
 const height = Dimensions.get('screen').height;
@@ -30,15 +36,22 @@ const Register = ({navigation}) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureTextEntryPassConfrim, setSecureTextEntryPassConfrim] =
     useState(true);
-  const [full_name, setFull_name] = useState();
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
-  const [password_confirmation, SetPassword_confirmation] = useState();
-  const [phone_number, setPhone_number] = useState();
-  const [email, setEmail] = useState();
+  const [full_name, setFull_name] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [password_confirmation, SetPassword_confirmation] = useState('');
+  const [phone_number, setPhone_number] = useState('');
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const isMounted = useRef(true);
+  const phoneInput = useRef(null);
+  const [formattedValue, setFormattedValue] = useState('');
 
   const Reg = async () => {
     try {
+      setLoading(true);
       // Validasi Full_name
       if (full_name.trim().length === 0) {
         Alert.alert('Perhatian!', 'Nama lengkap harus diisi');
@@ -54,11 +67,6 @@ const Register = ({navigation}) => {
       // Validasi phone_number
       if (!phone_number) {
         Alert.alert('Perhatian!', 'Nomor telepone harus diisi');
-        return;
-      }
-
-      if (!phone_number.startsWith('62')) {
-        Alert.alert('Perhatian!', 'Nomor telepon harus di awali dengan 62 ');
         return;
       }
 
@@ -125,27 +133,42 @@ const Register = ({navigation}) => {
         email,
         password,
         password_confirmation,
-        phone_number,
+        phone_number: formattedValue,
         navigation,
       });
       console.log('result...', result);
 
       if (result) {
-        // Tampilkan pesan sukses
         ToastAndroid.show('Berhasil mendaftarkan akun', ToastAndroid.SHORT);
-
-        // Navigasi ke screen Login jika semua data telah diisi
-        navigation.goBack();
+        if (navigation && navigation.goBack) {
+          navigation.goBack();
+        }
+      } else {
+        console.log('Register failed or no token received.');
+        showErrorModal('maaf sedang tidak baik-baik saja.');
       }
     } catch (error) {
-      // Tangani kesalahan jika API tidak berfungsi atau ada masalah lain
-      console.log('Error', error);
+      console.log('Error during login ', error);
+    } finally {
+      if (isMounted.current) {
+        setLoading(false);
+      }
     }
   };
 
   useEffect(() => {
-    Reg();
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
+
+  // ! MODAL
+  const showErrorModal = message => {
+    if (navigation && navigation.goBack) {
+      setErrorMessage(message);
+      setModalVisible(true);
+    }
+  };
 
   // ! SecureTextEntry password
   const togglesecureTextEntry = () => {
@@ -158,36 +181,51 @@ const Register = ({navigation}) => {
   };
 
   // ! Image eye
-  const eyeIcon = secureTextEntry ? icons.show : icons.eye;
+  const eyeIconSVG = secureTextEntry ? icons.show : icons.eye;
   const eyeIconConfrim = secureTextEntryPassConfrim ? icons.show : icons.eye;
 
   return (
     <SafeAreaView style={styles.container}>
+      <Loader visible={loading} />
+
+      {/* Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{errorMessage}</Text>
+            <TouchableHighlight
+              style={{...styles.openButton, backgroundColor: '#2196F3'}}
+              onPress={() => {
+                setModalVisible(modalVisible);
+              }}>
+              <Button
+                title={'tTutup'}
+                onPress={() => {
+                  setModalVisible(false);
+                }}
+              />
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
+
       <ScrollView>
         <StatusBar barStyle={'light-content'} backgroundColor={colors.green} />
         <View style={styles.ViewContainer}>
-          <Image source={images.Masjid} style={styles.Masjid} />
-          <View style={styles.bodyText}>
-            <Text style={styles.textMasjid}>Muslim </Text>
-            <Text style={styles.textIndo}>Indonesia</Text>
-          </View>
+          <Image source={images.logoMuslimIndo} style={styles.Masjid} />
         </View>
         <View style={styles.contentTxtHeading}>
           <Text style={styles.txtCreate}>Create</Text>
           <Text style={styles.txtAccount}> Account</Text>
         </View>
 
-        {/* DESCRIPTION MUSLIM INDO */}
-        <View style={styles.bodyDes}>
-          <Text style={styles.bodyTextDescription}>
-            " Selamat datang di Muslim Indonesia, Mari kita menjalani hari
-            dengan semangat keimanan. Dapatkan Restoran & kajian - kajian serta
-            Masjid Sidaq di lokasi Anda, dan nikmati berbagai fitur berguna
-            lainnya untuk mendukung kehidupan Anda."
-          </Text>
-        </View>
-
-        {/* TEXTINPUT */}
+        {/* FULLNAME */}
         <Fumi
           label={'Full name'}
           iconClass={Icon}
@@ -200,6 +238,8 @@ const Register = ({navigation}) => {
           color={colors.black}
           onChangeText={val => setFull_name(val)}
         />
+
+        {/* USERNAME */}
         <Fumi
           label={'Username'}
           iconClass={Icon}
@@ -212,19 +252,24 @@ const Register = ({navigation}) => {
           color={colors.black}
           onChangeText={val => setUsername(val)}
         />
-        <Fumi
-          label={'+62'}
-          iconClass={Icon}
-          iconName={'phone'}
-          iconColor={'#54B435'}
-          iconSize={25}
-          iconWidth={40}
-          inputPadding={16}
-          keyboardType="number-pad"
-          style={styles.fumiPassword}
-          color={colors.black}
-          onChangeText={val => setPhone_number(val)}
+
+        {/* PHONE_NUMBER */}
+        <PhoneInput
+          ref={phoneInput}
+          defaultValue={phone_number}
+          defaultCode="DM"
+          layout="first"
+          containerStyle={styles.phone_number}
+          onChangeText={text => {
+            setPhone_number(text);
+          }}
+          onChangeFormattedText={text => {
+            setFormattedValue(text);
+          }}
+          autoFocus
         />
+
+        {/* EMAIL */}
         <Fumi
           label={'Email'}
           iconClass={Icon}
@@ -238,6 +283,8 @@ const Register = ({navigation}) => {
           color={colors.black}
           onChangeText={val => setEmail(val)}
         />
+
+        {/* PASSWORD */}
         <Fumi
           label={'Password'}
           iconClass={Icon}
@@ -256,7 +303,7 @@ const Register = ({navigation}) => {
         {/*ICON EYE */}
         <View style={styles.bodyEyePassword}>
           <TouchableOpacity onPress={togglesecureTextEntry}>
-            <Image source={eyeIcon} style={styles.eye} />
+            <Image source={eyeIconSVG} style={styles.eyePassword} />
           </TouchableOpacity>
         </View>
 
@@ -282,10 +329,13 @@ const Register = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
-        {/* FOOTER */}
+        {/* CREATE ACCOUNT */}
         <TouchableOpacity
           onPress={() => Reg()}
-          style={{justifyContent: 'center', alignItems: 'center'}}>
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <LinearGradient
             colors={['#40EC15', '#688F16']}
             style={styles.contentCreate}>
@@ -297,18 +347,23 @@ const Register = ({navigation}) => {
         <View style={styles.bodyConnect}>
           <Text style={styles.txtConnect}>Connect With</Text>
           <TouchableOpacity>
-            <Image source={icons.GoggleIndo} style={styles.Goggle} />
+            <IconGoogleSVG style={styles.Goggle} />
           </TouchableOpacity>
         </View>
 
         {/* have a account */}
         <View style={styles.createAccount}>
           <Text style={styles.txtQuestions}>Already have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}>
             <Text style={styles.txtCreateAccount}>Login</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.line} />
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={styles.line} />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -327,38 +382,23 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   Masjid: {
-    height: hp('25%'),
+    height: hp('20%'),
     width: wp('60%'),
-  },
-  bodyText: {
-    flexDirection: 'row',
-    marginTop: 3,
-  },
-  textMasjid: {
-    fontFamily: fonts.PoppinsMedium,
-    fontSize: dimens.xxxl,
-    color: colors.yellow,
-  },
-  textIndo: {
-    fontFamily: fonts.PoppinsMedium,
-    fontSize: dimens.xxxl,
-    color: colors.white,
   },
   contentTxtHeading: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '3%',
+    marginHorizontal: 18,
   },
   txtCreate: {
     color: colors.white,
-    fontFamily: fonts.PoppinsBold,
-    fontSize: dimens.xxxl,
+    fontFamily: fonts.PoppinsSemiBold,
+    fontSize: dimens.xxl,
   },
   txtAccount: {
     color: colors.yellow,
-    fontFamily: fonts.PoppinsBold,
-    fontSize: dimens.xxxl,
+    fontFamily: fonts.PoppinsSemiBold,
+    fontSize: dimens.xxl,
   },
   bodyDes: {
     marginTop: 5,
@@ -371,13 +411,19 @@ const styles = StyleSheet.create({
   fumiPassword: {
     marginHorizontal: 20,
     marginVertical: 10,
-    borderRadius: 10,
     marginTop: '2%',
     height: hp('10%'),
   },
+  phone_number: {
+    marginHorizontal: 20,
+    marginVertical: 10,
+    marginTop: '2%',
+    height: '6.8%',
+    width: '90%',
+  },
+
   fumiConfrimPassword: {
     marginHorizontal: 20,
-    borderRadius: 10,
     height: hp('10%'),
     bottom: 22,
   },
@@ -395,11 +441,16 @@ const styles = StyleSheet.create({
     height: 30,
     width: 25,
   },
+  eyePassword: {
+    bottom: 55,
+    height: 30,
+    width: 25,
+  },
   contentCreate: {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
-    width: width / 2,
+    width: '80%',
     height: height / 11,
   },
   bodyTxtCreate: {
@@ -418,13 +469,12 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   Goggle: {
-    width: wp('10%'),
+    width: wp('9%'),
     height: hp('5%'),
   },
   createAccount: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '6%',
   },
   txtQuestions: {
     color: colors.black,
@@ -441,7 +491,6 @@ const styles = StyleSheet.create({
     color: colors.black,
     marginTop: '10%',
     bottom: 7,
-    marginLeft: 128,
     borderRadius: 10,
   },
 });

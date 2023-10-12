@@ -25,7 +25,7 @@ const Input = ({
               ? colors.blue
               : colors.secondary,
             alignItems: 'center',
-            backgroundColor: '#fff', // Updated background color
+            backgroundColor: '#EBEBEB', // Updated background color
           },
         ]}>
         <Icon

@@ -21,6 +21,7 @@ const images = {
   BgLogo: require('../assets/images/BgLogo.png'),
   UstadzFarid: require('../assets/images/UstadzFarid.png'),
   UstadzKiki: require('../assets/images/UstadzKiki.png'),
+  logoMuslimIndo: require('../assets/images/LogoMuslimIndoNEW.png'),
 };
 
 // ! Icons
@@ -45,7 +46,6 @@ const icons = {
   logOut: require('../assets/icons/logOut.png'),
   goggleMap: require('../assets/icons/goggleMap.png'),
   show: require('../assets/icons/show.png'),
-  hide: require('../assets/icons/hide.png'),
   phoneCall: require('../assets/icons/phone-call.png'),
 };
 

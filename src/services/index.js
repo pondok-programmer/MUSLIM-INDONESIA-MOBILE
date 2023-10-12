@@ -55,13 +55,9 @@ const get = async (url = '', params = {}) => {
 
 const post = async (url = '', params = {}) => {
   let newUrl = `${AppConfig.baseUrl}${url}`;
-  console.log(params, 'ini params post');
-  console.log('ENDPOINT...', newUrl);
 
   let token = await AsyncStorage.getItem('token');
-  let full_name = await AsyncStorage.getItem('full_name');
   console.log('token', token);
-  console.log('full_name', full_name);
   let result =
     token != null
       ? fetch(newUrl, {
@@ -90,11 +86,9 @@ const post = async (url = '', params = {}) => {
         })
           .then(res => res.json())
           .then(resJson => {
-            console.log('respon from resJson', resJson);
             return resJson;
           })
           .catch(err => {
-            console.log('response error', err);
             return err;
           });
   return result;
@@ -102,7 +96,6 @@ const post = async (url = '', params = {}) => {
 
 const put = async (url = '', params = {}) => {
   let newUrl = `${AppConfig.baseUrl}${url}`;
-  console.log('ENDPOINT...', newUrl);
 
   let token = await AsyncStorage.getItem('token');
   console.log('token', token);
@@ -144,10 +137,8 @@ const put = async (url = '', params = {}) => {
 
 const postFormData = async (url = '', params = new FormData()) => {
   let newUrl = `${AppConfig.baseUrl}${url}`;
-  console.log('ENDPOINT...', newUrl);
 
   let token = await AsyncStorage.getItem('token');
-  console.log('token', token);
 
   let result =
     token != null
@@ -177,11 +168,9 @@ const postFormData = async (url = '', params = new FormData()) => {
         })
           .then(res => res.json())
           .then(resJson => {
-            console.log('ini edit profile', resJson);
             return resJson;
           })
           .catch(err => {
-            console.log('error edit post', err);
             return err;
           });
   return result;
@@ -189,7 +178,6 @@ const postFormData = async (url = '', params = new FormData()) => {
 
 const putFormData = async (url = '', params = new FormData()) => {
   let newUrl = `${AppConfig.baseUrl}${url}`;
-  console.log('ENDPOINT...', newUrl);
 
   let token = await AsyncStorage.getItem('token');
   console.log('token', token);
@@ -232,11 +220,8 @@ const putFormData = async (url = '', params = new FormData()) => {
 
 const postReg = async (url = '', params = {}) => {
   let newUrl = `${AppConfig.baseUrl}${url}`;
-  console.log(params, 'ini params postReg');
-  console.log('ENDPOINT...', newUrl);
 
   let token = await AsyncStorage.getItem('token');
-  console.log('token', token);
   let result =
     token != null
       ? fetch(newUrl, {
@@ -275,11 +260,8 @@ const postReg = async (url = '', params = {}) => {
 
 const postReadContentMasjid = async (url = '', params = {}) => {
   let newUrl = `${AppConfig.baseUrl}${url} `;
-  console.log(params, 'ini params post Content Masjid');
-  console.log('ENDPOINT...', newUrl);
 
   let token = await AsyncStorage.getItem('token');
-  console.log('token', token);
   let result =
     token != null
       ? fetch(newUrl, {
@@ -296,7 +278,6 @@ const postReadContentMasjid = async (url = '', params = {}) => {
             return resJson;
           })
           .catch(err => {
-            console.log('ini error ada token', err);
             return err;
           })
       : fetch(newUrl, {
@@ -312,7 +293,6 @@ const postReadContentMasjid = async (url = '', params = {}) => {
             return resJson;
           })
           .catch(err => {
-            console.log('ini error', err);
             return err;
           });
   return result;
@@ -320,11 +300,8 @@ const postReadContentMasjid = async (url = '', params = {}) => {
 
 const postLogout = async (url = '', params = {}) => {
   let newUrl = `${AppConfig.baseUrl}${url} `;
-  console.log(params, 'ini params postlogout');
-  console.log('ENDPOINT...', newUrl);
 
   let token = await AsyncStorage.getItem('token');
-  console.log('token', token);
   let result =
     token != null
       ? fetch(newUrl, {
@@ -350,6 +327,129 @@ const postLogout = async (url = '', params = {}) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          });
+  return result;
+};
+
+const postSearch = async (url = '', params = {}) => {
+  let newUrl = `${AppConfig.baseUrl}${url}`;
+
+  let token = await AsyncStorage.getItem('token');
+  let result =
+    token != null
+      ? fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          })
+      : fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          });
+  return result;
+};
+
+const postReedProfile = async (url = '', params = {}) => {
+  let newUrl = `${AppConfig.baseUrl}${url}`;
+
+  let token = await AsyncStorage.getItem('token');
+  console.log('token', token);
+  let result =
+    token != null
+      ? fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            console.log('error postReadPr', resJson);
+            return err;
+          })
+      : fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          });
+  return result;
+};
+
+const postCreateAdmin = async (url = '', params = new FormData()) => {
+  let newUrl = `${AppConfig.baseUrl}${url}`;
+
+  let token = await AsyncStorage.getItem('token');
+
+  let result =
+    token != null
+      ? fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+          body: params,
+        })
+          .then(res => res.json())
+          .then(resJson => {
+            return resJson;
+          })
+          .catch(err => {
+            return err;
+          })
+      : fetch(newUrl, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+          body: params,
         })
           .then(res => res.json())
           .then(resJson => {
@@ -370,4 +470,7 @@ export {
   postReg,
   postLogout,
   postReadContentMasjid,
+  postSearch,
+  postReedProfile,
+  postCreateAdmin,
 };

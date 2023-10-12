@@ -7,7 +7,6 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
-  TextInput,
   ScrollView,
   Dimensions,
 } from 'react-native';
@@ -18,21 +17,20 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import TopTab from './TopTab';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import DataCarousel from './DataCarousel';
-// import Animated from 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const width = Dimensions.get('window').width;
 
-const Home = ({}) => {
-  const [notifikation, setNotifikation] = useState(false);
-  const [index, setIndex] = useState(0);
-  const [full_name, setFull_name] = useState();
+const Home = ({navigation}) => {
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;
+
+  const [notifikation, setNotifikation] = useState(false);
+  const [index, setIndex] = useState(0);
   const {width: screenWidth} = Dimensions.get('window');
   const sliderWidth = screenWidth;
   const itemWidth = screenWidth * 0.8;
@@ -57,6 +55,7 @@ const Home = ({}) => {
     </LinearGradient>
   );
 
+  // ! CAROUSEL
   useEffect(() => {
     const timerCarousel = setInterval(() => {
       if (carouselPagination.current) {
@@ -77,16 +76,26 @@ const Home = ({}) => {
   }, [index]);
 
   // ! Di simpan di LocalStorage
+  const [dataAll, setDataAll] = useState({
+    full_name: '',
+    photo: '',
+  });
+
   useEffect(() => {
-    const retrieveData = async () => {
-      try {
-        const getUserData = await AsyncStorage.getItem('full_name'); // Ganti 'username' menjadi 'userData'
-        setFull_name(getUserData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    retrieveData();
+    try {
+      AsyncStorage.getItem('UserData').then(response => {
+        if (response !== null) {
+          const user_data = JSON.parse(response);
+          if (user_data.full_name && user_data.photo) {
+            setDataAll(user_data);
+          }
+        } else {
+          console.log('Data "UserData" belum tersedia di AsyncStorage');
+        }
+      });
+    } catch (error) {
+      console.log('Error while fetching user data :', error);
+    }
   }, []);
 
   return (
@@ -104,14 +113,13 @@ const Home = ({}) => {
           },
         ]}>
         <ScrollView style={{flex: 1}}>
-          {/* <Animated style={styles.headerTxtWelcome}> */}
           <View style={styles.headerTxtWelcome}>
             <Text
               style={[
                 styles.textWelcome,
                 {
                   fontSize: dimens.l,
-                  color: dark ? colors.black : colors.white,
+                  color: dark ? colors.white : colors.black,
                 },
               ]}>
               Assalamualaikum, Selamat
@@ -122,7 +130,7 @@ const Home = ({}) => {
                   styles.textWelcome,
                   {
                     fontSize: dimens.l,
-                    color: dark ? colors.black : colors.white,
+                    color: dark ? colors.white : colors.black,
                   },
                 ]}>
                 Datang di
@@ -157,41 +165,47 @@ const Home = ({}) => {
                 style={[
                   styles.text,
                   {
-                    fontSize: dimens.xl,
-                    color: dark ? colors.black : colors.white,
+                    fontSize: dimens.l,
+                    color: dark ? colors.white : colors.black,
                   },
                 ]}>
-                {full_name}
+                {dataAll && dataAll.full_name ? dataAll.full_name : 'User'}
               </Text>
 
-              {/* NOTIFICATION & IAMGE USER */}
+              {/*IAMGE USER */}
               <View style={styles.bodynotifAndUser}>
                 <TouchableOpacity
-                  onPress={() => setNotifikation(!notifikation)}
-                  style={{paddingRight: 5}}>
+                  onPress={() => navigation.navigate('Admin')}
+                  style={styles.BodyUser}>
                   <Image
                     source={
-                      notifikation ? icons.notifColor : icons.notification
+                      dataAll.photo && dataAll.photo !== ''
+                        ? {uri: dataAll.photo}
+                        : images.user
                     }
-                    style={styles.imgNotif}
+                    style={styles.imgUser}
                   />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Image source={images.user} style={styles.imgUser} />
                 </TouchableOpacity>
               </View>
             </View>
           </View>
-
+          {/* 
+    
           {/* TEXTINPUT */}
           <View style={styles.textInput}>
-            <View style={styles.bodyTextInput}>
+            <TouchableOpacity
+              style={styles.bodyTextInput}
+              onPress={() => navigation.navigate('DataSearch')}>
               <Image source={icons.search} style={styles.imgSearch} />
-              <TextInput
-                style={styles.ViewTextInput}
-                placeholder="Cari Masjid terdekat..."
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setNotifikation(!notifikation)}
+              style={{paddingRight: 5}}>
+              <Image
+                source={notifikation ? icons.notification : icons.notifColor}
+                style={styles.imgNotif}
               />
-            </View>
+            </TouchableOpacity>
           </View>
 
           {/* CAROSEL KAJIAN */}
@@ -232,7 +246,6 @@ const Home = ({}) => {
               <TopTab />
             </View>
           </View>
-          {/* </Animated> */}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -248,15 +261,12 @@ const styles = StyleSheet.create({
     width: wp('100%'),
   },
   headerTxtWelcome: {
-    marginTop: '5%',
-    marginLeft: 10,
-  },
-  headerTxtWelcome: {
-    marginTop: '5%',
+    marginTop: '3%',
     marginLeft: 10,
   },
   viewMuslimIndonesia: {
     flexDirection: 'row',
+    bottom: 5,
   },
   textWelcome: {
     fontFamily: fonts.PoppinsRegular,
@@ -269,8 +279,7 @@ const styles = StyleSheet.create({
     bottom: 4,
   },
   textWelcomeMuslim: {
-    fontFamily: fonts.PoppinsBold,
-    fontSize: dimens.l,
+    fontFamily: fonts.PoppinsSemiBold,
     color: colors.black,
     textAlign: 'left',
     paddingLeft: 5,
@@ -281,12 +290,13 @@ const styles = StyleSheet.create({
     bottom: 10,
   },
   text: {
-    fontFamily: fonts.PoppinsBold,
-    fontSize: dimens.xxxl,
+    fontFamily: fonts.PoppinsMedium,
+    fontSize: dimens.xl,
     color: colors.black,
     textAlign: 'left',
     height: '40%',
     width: width / 2,
+    bottom: 6,
   },
   bodynotifAndUser: {
     justifyContent: 'flex-end',
@@ -298,30 +308,51 @@ const styles = StyleSheet.create({
     height: hp('4%'),
     width: wp('8%'),
   },
+  BodyUser: {
+    marginRight: 10,
+  },
   imgUser: {
-    height: hp('7.3%'),
-    width: wp('15%'),
+    height: hp('8%'),
+    width: wp('18%'),
+    borderRadius: 48,
   },
   textInput: {
     alignItems: 'center',
-    bottom: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    bottom: 40,
   },
   bodyTextInput: {
     flexDirection: 'row',
     backgroundColor: colors.white,
-    borderRadius: 25,
+    borderRadius: 6,
+    width: wp('83%'),
+    height: hp('6%'),
+    alignItems: 'center',
+    borderWidth: 1.1,
   },
   imgSearch: {
     marginHorizontal: 10,
-    marginTop: '3%',
     height: hp('4%'),
     width: wp('7%'),
   },
   ViewTextInput: {
-    height: hp('7%'),
-    width: wp('80%'),
+    height: hp('6%'),
     textShadowColor: '#688F16',
     color: colors.black,
+  },
+  buttonEnter: {
+    backgroundColor: colors.white,
+    height: '93%',
+    width: '14%',
+    borderRadius: 10,
+  },
+  searchButton: {
+    fontFamily: fonts.PoppinsMedium,
+    fontSize: dimens.l,
+    color: colors.black,
+    textAlign: 'center',
+    marginVertical: 10,
   },
   contentCarosel: {
     height: 180,
@@ -345,9 +376,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.PoppinsRegular,
     color: colors.black,
     textAlign: 'justify',
-    textAlignVertical: 'auto',
-    width: wp('48%'),
+    // textAlignVertical: 'auto',
+    // width: wp('48%'),
     marginVertical: 6,
+    backgroundColor: colors.blue,
   },
   bottomDate: {
     justifyContent: 'center',
@@ -379,10 +411,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   bodyTopTab: {
-    backgroundColor: colors.blue,
+    backgroundColor: colors.white,
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
-    paddingBottom: '100%',
   },
   Line: {
     borderWidth: 1.8,
